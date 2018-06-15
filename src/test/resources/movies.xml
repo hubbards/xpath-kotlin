@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+
+<StarMovieData>
+    <Star starID="cf" starredIn="sw">
+        <Name>Carrie Fisher</Name>
+        <Address>
+            <Street>123 Maple St.</Street>
+            <City>Hollywood</City>
+        </Address>
+        <Address>
+            <Street>5 Locust Ln.</Street>
+            <City>Malibu</City>
+        </Address>
+    </Star>
+    <Star starID = "mh" starredIn = "sw">
+        <Name>Mark Hamill</Name>
+        <Street>456 Oak Rd.</Street>
+        <City>Brentwood</City>
+    </Star>
+    <Movie movieID = "sw" starsOf = "cf mh">
+        <Title>Star Wars</Title>
+        <Year>1977</Year>
+    </Movie>
+</StarMovieData>
