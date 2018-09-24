@@ -1,6 +1,6 @@
-package xpath
+package com.github.hubbards.xpath
 
-import xpath.Operator.*
+import com.github.hubbards.xpath.Operator.*
 
 /**
  * An XPath expression, see

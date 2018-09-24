@@ -1,4 +1,4 @@
-package xpath
+package com.github.hubbards.xpath
 
 // TODO add missing operators
 internal enum class Operator {

@@ -1,4 +1,4 @@
-package xpath
+package com.github.hubbards.xpath
 
 /**
  * A function call expression, see

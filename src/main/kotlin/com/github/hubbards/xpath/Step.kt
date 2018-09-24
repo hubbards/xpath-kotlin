@@ -1,6 +1,6 @@
-package xpath
+package com.github.hubbards.xpath
 
-import xpath.Axis.*
+import com.github.hubbards.xpath.Axis.*
 
 const val NODE_TEST = "node()"
 

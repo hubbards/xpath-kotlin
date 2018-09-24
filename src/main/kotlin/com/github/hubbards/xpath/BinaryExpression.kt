@@ -1,4 +1,4 @@
-package xpath
+package com.github.hubbards.xpath
 
 class BinaryExpression internal constructor(
     val operator: Operator,

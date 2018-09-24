@@ -1,4 +1,4 @@
-package xpath
+package com.github.hubbards.xpath
 
 class LiteralString(string: String) : Expression() {
   private val syntax = "'$string'"

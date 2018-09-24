@@ -1,4 +1,4 @@
-package xpath
+package com.github.hubbards.xpath
 
 import kotlin.test.assertEquals
 import org.junit.Test

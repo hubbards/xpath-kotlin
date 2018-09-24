@@ -1,4 +1,4 @@
-package xpath
+package com.github.hubbards.xpath
 
 class LiteralNumber(number: Number) : Expression() {
   private val syntax = number.toString()

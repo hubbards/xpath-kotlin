@@ -1,4 +1,4 @@
-package xpath.extension
+package com.github.hubbards.xpath.extension
 
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
