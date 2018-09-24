@@ -20,7 +20,7 @@ class ExpressionTest {
 
   @Test
   fun functionCallSyntax() {
-    val e = localName(absolutePath { descendant("img"); parent("node()") })
+    val e = localName(AbsolutePath { descendant("img"); parent("node()") })
     assertEquals(
         expected = "local-name(/descendant::img/parent::node())",
         actual = e.unabbreviated()
@@ -34,7 +34,7 @@ class ExpressionTest {
   @Test
   fun binaryExpressionSyntax() {
     val l = LiteralNumber(3)
-    val r = absolutePath {
+    val r = AbsolutePath {
       descendantOrSelf()
       child("ol")
       child("li")
