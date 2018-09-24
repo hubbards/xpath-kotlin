@@ -6,8 +6,8 @@ import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 import org.xml.sax.InputSource
 import xpath.LiteralString
-import xpath.AbsolutePath
-import xpath.RelativePath
+import xpath.absolutePath
+import xpath.relativePath
 import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
 import kotlin.test.assertEquals
@@ -23,7 +23,7 @@ class XPathTest {
 
   @Test
   fun evaluateInContextOfInputSource() {
-    val e = AbsolutePath {
+    val e = absolutePath {
       child("StarMovieData")
       child("Star")
       child("Name")
@@ -37,17 +37,17 @@ class XPathTest {
 
   @Test
   fun evaluateInContextOfItem() {
-    val e1 = AbsolutePath {
+    val e1 = absolutePath {
       child("StarMovieData")
       child("Star") {
-        val l = RelativePath { attribute("starID") }
+        val l = relativePath { attribute("starID") }
         val r = LiteralString("cf")
         predicates += l equal r
       }
     }
     val s1 = InputSource(path)
     val s2 = xpath.evaluate(e1, s1, XPathConstants.NODE) as Node
-    val e2 = RelativePath {
+    val e2 = relativePath {
       child("Address")
       child("City")
     }

@@ -6,7 +6,7 @@ import org.junit.Test
 class PathTest {
   @Test
   fun childSyntax() {
-    val p = RelativePath { child("div"); child("para") }
+    val p = relativePath { child("div"); child("para") }
     assertEquals(
         expected = "child::div/child::para",
         actual = p.unabbreviated()
@@ -19,9 +19,9 @@ class PathTest {
 
   @Test
   fun attributeSyntax() {
-    val p = RelativePath {
+    val p = relativePath {
       child("para") {
-        val l = RelativePath { attribute("type") }
+        val l = relativePath { attribute("type") }
         val r = LiteralString("warning")
         predicates += l equal r
       }
@@ -38,7 +38,7 @@ class PathTest {
 
   @Test
   fun absolutePathDescendantOrSelfSyntax() {
-    val p = AbsolutePath { descendantOrSelf(); child("para") }
+    val p = absolutePath { descendantOrSelf(); child("para") }
     assertEquals(
         expected = "/descendant-or-self::node()/child::para",
         actual = p.unabbreviated()
@@ -51,7 +51,7 @@ class PathTest {
 
   @Test
   fun relativePathDescendantOrSelfSyntax() {
-    val p = RelativePath { child("div"); descendantOrSelf(); child("para") }
+    val p = relativePath { child("div"); descendantOrSelf(); child("para") }
     assertEquals(
         expected = "child::div/descendant-or-self::node()/child::para",
         actual = p.unabbreviated()
@@ -64,7 +64,7 @@ class PathTest {
 
   @Test
   fun selfSyntax() {
-    val p = RelativePath { self(); descendantOrSelf(); child("para") }
+    val p = relativePath { self(); descendantOrSelf(); child("para") }
     assertEquals(
         expected = "self::node()/descendant-or-self::node()/child::para",
         actual = p.unabbreviated()
@@ -77,7 +77,7 @@ class PathTest {
 
   @Test
   fun parentSyntax() {
-    val p = RelativePath { parent(); child("title") }
+    val p = relativePath { parent(); child("title") }
     assertEquals(
         expected = "parent::node()/child::title",
         actual = p.unabbreviated()
