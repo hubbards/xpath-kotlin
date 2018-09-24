@@ -58,7 +58,6 @@ class RelativePath(init: Path.() -> Unit) : Path() {
           (if (steps.size > 2) "/" else "") + steps.last().abbreviated()
         else
           ""
-
     return steps.drop(1).dropLast(1).joinToString(
         separator = "/",
         prefix = first,
@@ -88,7 +87,6 @@ class AbsolutePath(init: Path.() -> Unit) : Path() {
           (if (steps.size > 1) "/" else "") + steps.last().abbreviated()
         else
           ""
-
     return steps.dropLast(1).joinToString(
         separator = "/",
         prefix = "/",

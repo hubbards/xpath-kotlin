@@ -16,9 +16,11 @@ class FunctionCall(val name: String,
           transform = transform
       )
 
-  override fun abbreviated() = helper(Expression::abbreviated)
+  override fun abbreviated() =
+      helper(Expression::abbreviated)
 
-  override fun unabbreviated() = helper(Expression::unabbreviated)
+  override fun unabbreviated() =
+      helper(Expression::unabbreviated)
 }
 
 /**
