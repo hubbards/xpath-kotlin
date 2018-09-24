@@ -24,15 +24,17 @@ class FunctionCall(val name: String,
 /**
  * Returns the number of nodes in [argument] node-set.
  */
-fun count(argument: Expression) = FunctionCall("count", argument)
+fun count(argument: Expression) =
+    FunctionCall("count", argument)
 
 /**
  * Returns the local part of the expanded-name of the first node in [argument]
  * node-set.
  */
-fun localName(argument: Expression) = FunctionCall("local-name", argument)
+fun localName(argument: Expression) =
+    FunctionCall("local-name", argument)
 
 /**
  * Returns the local part of the expanded-name of the context node.
  */
-fun localName() = FunctionCall("local-name")
+val localName = FunctionCall("local-name")

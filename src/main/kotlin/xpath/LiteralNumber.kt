@@ -1,6 +1,6 @@
 package xpath
 
-class LiteralNumber(val number: Number) : Expression() {
+class LiteralNumber(number: Number) : Expression() {
   private val syntax = number.toString()
 
   override fun abbreviated() = syntax

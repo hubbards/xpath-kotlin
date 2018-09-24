@@ -1,7 +1,7 @@
 package xpath
 
 // TODO add missing operators
-enum class Operator {
+internal enum class Operator {
   EQUAL,
   NOT_EQUAL,
   GREATER_THAN,

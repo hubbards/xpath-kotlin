@@ -1,6 +1,6 @@
 package xpath
 
-class LiteralString(val string: String) : Expression() {
+class LiteralString(string: String) : Expression() {
   private val syntax = "'$string'"
 
   override fun abbreviated() = syntax

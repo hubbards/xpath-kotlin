@@ -34,9 +34,6 @@ abstract class Expression : Syntax {
   infix fun union(e: Expression) =
       BinaryExpression(UNION, this, e)
 
-  abstract override fun unabbreviated(): String
-
-  abstract override fun  abbreviated(): String
-
-  override fun toString() = abbreviated()
+  override fun toString() =
+      abbreviated()
 }

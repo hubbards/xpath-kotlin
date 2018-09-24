@@ -5,13 +5,9 @@ import xpath.Axis.*
 /**
  * A location path, see
  * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#location-paths).
- *
- * TODO make subclass for absolute path
  */
-class Path(val isAbsolute: Boolean) : Expression() {
-  val isRelative = !isAbsolute
-
-  private val steps = mutableListOf<Step>()
+sealed class Path : Expression() {
+  protected val steps = mutableListOf<Step>()
 
   private fun doInit(step: Step, init: Step.() -> Unit) {
     step.init()
@@ -41,54 +37,78 @@ class Path(val isAbsolute: Boolean) : Expression() {
 
   fun attribute(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
       doInit(Step(ATTRIBUTE, node), init)
-
-  // abbreviated syntax for /descendant-or-self::node()/
-  override fun abbreviated(): String {
-    val prefix =
-        if (isAbsolute)
-          "/"
-        else if (isRelative && steps.isNotEmpty())
-          steps.first().abbreviated() + (if (steps.size > 1) "/" else "")
-        else
-          ""
-    val postfix =
-        if (isAbsolute && steps.isNotEmpty())
-          (if (steps.size > 1) "/" else "") + steps.last().abbreviated()
-        else if (isRelative && steps.size > 1)
-          (if (steps.size > 2) "/" else "") + steps.last().abbreviated()
-        else
-          ""
-    return steps
-        .drop(if (isAbsolute) 0 else 1)
-        .dropLast(1)
-        .joinToString(
-            separator = "/",
-            prefix = prefix,
-            postfix = postfix
-        ) {
-          if (it.axis == DESCENDANT_OR_SELF &&
-              it.node == NODE_TEST &&
-              it.predicates.isEmpty())
-            ""
-          else
-            it.abbreviated()
-        }
-  }
-
-  override fun unabbreviated() =
-      steps.joinToString(
-          separator = "/",
-          prefix = if (isAbsolute) "/" else "",
-          transform = Step::unabbreviated
-      )
 }
 
 /**
  * Builds a relative location path.
  */
-fun relativePath(init: Path.() -> Unit) = Path(false).apply(init)
+class RelativePath(init: Path.() -> Unit) : Path() {
+  init {
+    apply(init)
+  }
+
+  override fun abbreviated(): String {
+    val first =
+        if (steps.isNotEmpty())
+          steps.first().abbreviated() + (if (steps.size > 1) "/" else "")
+        else
+          ""
+    val last =
+        if (steps.size > 1)
+          (if (steps.size > 2) "/" else "") + steps.last().abbreviated()
+        else
+          ""
+
+    return steps.drop(1).dropLast(1).joinToString(
+        separator = "/",
+        prefix = first,
+        postfix = last,
+        transform = ::helper
+    )
+  }
+
+  override fun unabbreviated() =
+      steps.joinToString(
+          separator = "/",
+          transform = Step::unabbreviated
+      )
+}
 
 /**
  * Builds an absolute location path.
  */
-fun absolutePath(init: Path.() -> Unit) = Path(true).apply(init)
+class AbsolutePath(init: Path.() -> Unit) : Path() {
+  init {
+    apply(init)
+  }
+
+  override fun abbreviated(): String {
+    val last =
+        if (steps.isNotEmpty())
+          (if (steps.size > 1) "/" else "") + steps.last().abbreviated()
+        else
+          ""
+
+    return steps.dropLast(1).joinToString(
+        separator = "/",
+        prefix = "/",
+        postfix = last,
+        transform = ::helper
+    )
+  }
+
+  override fun unabbreviated() =
+      steps.joinToString(
+          separator = "/",
+          prefix = "/",
+          transform = Step::unabbreviated
+      )
+}
+
+private fun helper(step: Step) =
+    if (step.axis == DESCENDANT_OR_SELF &&
+        step.node == NODE_TEST &&
+        step.predicates.isEmpty())
+      ""
+    else
+      step.abbreviated()

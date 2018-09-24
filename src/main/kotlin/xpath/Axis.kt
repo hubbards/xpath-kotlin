@@ -1,6 +1,6 @@
 package xpath
 
-enum class Axis {
+internal enum class Axis {
   SELF,
   CHILD,
   PARENT,
@@ -10,5 +10,6 @@ enum class Axis {
   ANCESTOR_OR_SELF,
   ATTRIBUTE;
 
-  override fun toString() = this.name.toLowerCase().replace('_', '-')
+  override fun toString() =
+      this.name.toLowerCase().replace('_', '-')
 }
