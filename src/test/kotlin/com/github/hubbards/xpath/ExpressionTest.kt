@@ -33,13 +33,15 @@ class ExpressionTest {
 
   @Test
   fun binaryExpressionSyntax() {
-    val l = LiteralNumber(3)
-    val r = AbsolutePath {
-      descendantOrSelf()
-      child("ol")
-      child("li")
+    val e = run {
+      val l = LiteralNumber(3)
+      val r = AbsolutePath {
+        descendantOrSelf()
+        child("ol")
+        child("li")
+      }
+      l greaterThan count(r)
     }
-    val e = l greaterThan count(r)
     assertEquals(
         expected = "3 > count(/descendant-or-self::node()/child::ol/child::li)",
         actual = e.unabbreviated()
