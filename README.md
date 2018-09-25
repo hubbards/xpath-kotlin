@@ -1,5 +1,7 @@
 # xpath-kotlin
 
+[![Build Status][build-status-image]][build-status]
+
 This project contains a shallow embedding of [XPath][xpath] in Kotlin.
 
 ## Instructions
@@ -17,4 +19,6 @@ Build the project with the command `./gradlew build`.
 
 Run the unit tests for the project with the command `./gradlew test`.
 
+[build-status-image]: https://travis-ci.com/hubbards/xpath-kotlin.svg?branch=master
+[build-status]: https://travis-ci.com/hubbards/xpath-kotlin
 [xpath]: https://www.w3.org/TR/1999/REC-xpath-19991116
