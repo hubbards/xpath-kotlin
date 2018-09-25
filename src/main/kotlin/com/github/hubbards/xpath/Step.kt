@@ -2,7 +2,7 @@ package com.github.hubbards.xpath
 
 import com.github.hubbards.xpath.Axis.*
 
-const val NODE_TEST = "node()"
+internal const val NODE_TEST = "node()"
 
 /**
  * A location step, see

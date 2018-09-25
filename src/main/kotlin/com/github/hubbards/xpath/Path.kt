@@ -40,7 +40,7 @@ sealed class Path : Expression() {
 }
 
 /**
- * Builds a relative location path.
+ * A relative location path.
  */
 class RelativePath(init: Path.() -> Unit) : Path() {
   init {
@@ -74,7 +74,7 @@ class RelativePath(init: Path.() -> Unit) : Path() {
 }
 
 /**
- * Builds an absolute location path.
+ * An absolute location path.
  */
 class AbsolutePath(init: Path.() -> Unit) : Path() {
   init {
