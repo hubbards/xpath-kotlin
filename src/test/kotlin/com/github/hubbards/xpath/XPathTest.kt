@@ -1,13 +1,10 @@
-package com.github.hubbards.xpath.extension
+package com.github.hubbards.xpath
 
 import org.junit.Before
 import org.junit.Test
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 import org.xml.sax.InputSource
-import com.github.hubbards.xpath.LiteralString
-import com.github.hubbards.xpath.AbsolutePath
-import com.github.hubbards.xpath.RelativePath
 import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
 import kotlin.test.assertEquals

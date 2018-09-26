@@ -1,7 +1,6 @@
-package com.github.hubbards.xpath.extension
+package com.github.hubbards.xpath
 
 import org.xml.sax.InputSource
-import com.github.hubbards.xpath.Expression
 import javax.xml.namespace.QName
 import javax.xml.xpath.XPath
 
