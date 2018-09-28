@@ -3,7 +3,7 @@
 //import org.jetbrains.dokka.gradle.DokkaTask
 
 group = "com.github.hubbards"
-version = "0.0.1"
+version = "0.0.2"
 
 plugins {
   //`maven-publish`
@@ -47,7 +47,7 @@ dependencies {
 //    vcsUrl = "https://github.com/hubbards/xpath-kotlin.git"
 //    setLicenses("MIT")
 //    version(delegateClosureOf<BintrayExtension.VersionConfig> {
-//      name = "0.0.1"
+//      name = "0.0.2"
 //    })
 //  })
 //}
