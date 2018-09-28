@@ -17,9 +17,9 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib", "1.2.71"))
-  testImplementation("junit:junit:4.12")
-  testImplementation(kotlin("test", "1.2.71"))
+  implementation(kotlin(module = "stdlib", version = "1.2.71"))
+  testImplementation(group = "junit", name = "junit", version = "4.12")
+  testImplementation(kotlin(module = "test", version = "1.2.71"))
 }
 
 //publishing {
