@@ -36,6 +36,7 @@ dependencies {
 //  }
 //}
 
+// when publishing, run ./gradlew build bintrayUpload -Puser=... -Pkey=...
 //bintray {
 //  user = property("user") as String
 //  key = property("key") as String
