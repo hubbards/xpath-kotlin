@@ -33,7 +33,7 @@ run {
 }
 ```
 
-## Instructions
+## Development Instructions
 
 We will assume that this project exists locally and we are logged into a shell
 where the working directory is the root of the project.
