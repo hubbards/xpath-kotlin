@@ -13,7 +13,7 @@ for XPath expressions.
 Consider the following XPath expression, which tests if there are fewer than 3
 ordered list items in a document.
 
-```xpath
+```
 3 > count(//ol/li)
 ```
 
@@ -21,7 +21,7 @@ Such an expression can be evaluated in Java using the [javax.xml.xpath] package
 but the expression must be encoded as a string. Using this XPath DSL, we
 can build a value equivalent to the XPath expression above in a structured way.
 
-```kotlin
+```
 run {
   val three = LiteralNumber(3)
   val items = AbsolutePath {
