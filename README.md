@@ -16,7 +16,7 @@ ordered list items in a document.
     3 > count(//ol/li)
 
 Such an expression can be evaluated in Java using the [javax.xml.xpath] package
-but the expression must be encoded as a string. Using this XPath DSL, we
+but the expression must be encoded as a [String]. Using this XPath DSL, we
 can build a value equivalent to the XPath expression above in a structured way.
 
     run {
@@ -49,4 +49,5 @@ Run the unit tests for the project with the command `./gradlew test`.
 [download-image]: https://api.bintray.com/packages/hubbards/maven/xpath-kotlin/images/download.svg
 [download]: https://bintray.com/hubbards/maven/xpath-kotlin/_latestVersion
 [javax.xml.xpath]: https://docs.oracle.com/javase/8/docs/api/javax/xml/xpath/package-summary.html
+[String]: https://docs.oracle.com/javase/8/docs/api/java/lang/String.html
 [xpath]: https://www.w3.org/TR/1999/REC-xpath-19991116
