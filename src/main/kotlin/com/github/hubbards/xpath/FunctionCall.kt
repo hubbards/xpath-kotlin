@@ -5,6 +5,7 @@ package com.github.hubbards.xpath
  * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Function-Calls).
  *
  * TODO add missing standard functions
+ * TODO use invoke convention
  */
 class FunctionCall(val name: String,
                    vararg val arguments: Expression) : Expression() {
