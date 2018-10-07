@@ -22,16 +22,43 @@ dependencies {
   testImplementation(kotlin(module = "test", version = "1.2.71"))
 }
 
+//tasks {
+//  val dokka by getting(DokkaTask::class) {
+//    outputFormat = "html"
+//    outputDirectory = "$buildDir/javadoc"
+//  }
+//
+//  val dokkaJar by creating(Jar::class) {
+//    group = JavaBasePlugin.DOCUMENTATION_GROUP
+//    description = "Assembles a JAR archive for dokka documentation"
+//    classifier = "javadoc"
+//    from(dokka)
+//  }
+//
+//  val sourceJar by creating(Jar::class) {
+//    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+//    description = "Assembles a JAR archive for source code"
+//    classifier = "sources"
+//    from(kotlin.sourceSets["main"].kotlin)
+//  }
+//
+//  artifacts {
+//    add("archives", dokkaJar)
+//    add("archives", sourceJar)
+//  }
+//}
+
 //publishing {
+//  repositories {
+//    maven {
+//      url = uri("$buildDir/repository")
+//    }
+//  }
 //  publications {
 //    create("default", MavenPublication::class.java) {
 //      from(components["java"])
-//      artifact(dokkaJar)
-//    }
-//    repositories {
-//      maven {
-//        url = uri("$buildDir/repository")
-//      }
+//      artifact(tasks["dokkaJar"])
+//      artifact(tasks["sourceJar"])
 //    }
 //  }
 //}
@@ -50,16 +77,4 @@ dependencies {
 //      name = "0.0.2"
 //    })
 //  })
-//}
-
-//val dokka by tasks.getting(DokkaTask::class) {
-//  outputFormat = "html"
-//  outputDirectory = "$buildDir/javadoc"
-//}
-
-//val dokkaJar by tasks.creating(Jar::class) {
-//  group = JavaBasePlugin.DOCUMENTATION_GROUP
-//  description = "Assembles a JAR archive for dokka documentation"
-//  classifier = "javadoc"
-//  from(dokka)
 //}
