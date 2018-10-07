@@ -1,6 +1,5 @@
 package com.github.hubbards.xpath
 
-// TODO add missing operators
 internal enum class Operator {
   EQUAL,
   NOT_EQUAL,
@@ -10,6 +9,11 @@ internal enum class Operator {
   LESS_THAN_OR_EQUAL_TO,
   AND,
   OR,
+  PLUS,
+  MINUS,
+  TIMES,
+  DIVIDE,
+  MODULO,
   UNION;
 
   override fun toString() =
@@ -22,6 +26,11 @@ internal enum class Operator {
         LESS_THAN_OR_EQUAL_TO -> "<="
         AND -> "and"
         OR -> "or"
+        PLUS -> "+"
+        MINUS -> "-"
+        TIMES -> "*"
+        DIVIDE -> "div"
+        MODULO -> "mod"
         UNION -> "|"
       }
 }

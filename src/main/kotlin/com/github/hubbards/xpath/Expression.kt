@@ -31,6 +31,27 @@ abstract class Expression : Syntax {
   infix fun or(e: Expression) =
       BinaryExpression(OR, this, e)
 
+  operator fun unaryMinus() =
+      UnaryExpression(this)
+
+  operator fun plus(e: Expression) =
+      BinaryExpression(PLUS, this, e)
+
+  operator fun minus(e: Expression) =
+      BinaryExpression(MINUS, this, e)
+
+  operator fun times(e: Expression) =
+      BinaryExpression(TIMES, this, e)
+
+  operator fun div(e: Expression) =
+      BinaryExpression(DIVIDE, this, e)
+
+  operator fun mod(e: Expression) =
+      BinaryExpression(MODULO, this, e)
+
+  operator fun rem(e: Expression) =
+      BinaryExpression(MODULO, this, e)
+
   infix fun union(e: Expression) =
       BinaryExpression(UNION, this, e)
 
