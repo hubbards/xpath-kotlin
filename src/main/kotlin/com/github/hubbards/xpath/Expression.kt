@@ -46,9 +46,6 @@ abstract class Expression : Syntax {
   operator fun div(e: Expression) =
       BinaryExpression(DIVIDE, this, e)
 
-  operator fun mod(e: Expression) =
-      BinaryExpression(MODULO, this, e)
-
   operator fun rem(e: Expression) =
       BinaryExpression(MODULO, this, e)
 

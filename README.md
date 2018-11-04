@@ -31,10 +31,12 @@ can build a value equivalent to the XPath expression above in a structured way.
 
 ## Development Instructions
 
-We will assume that this project exists locally and we are logged into a shell
-where the working directory is the root of the project.
+This section is intended for developers of the project. Clients of the project
+may safely skip this section.
 
-We will also assume that Java JDK version 8 or higher is installed.
+We will assume that this project exists locally and we are logged into a shell
+where the working directory is the root of the project. We will also assume that
+JDK version 8 or higher is installed.
 
 ### Build
 
@@ -43,6 +45,16 @@ Build the project with the command `./gradlew build`.
 ### Test
 
 Run the unit tests for the project with the command `./gradlew test`.
+
+### Document
+
+Generate documentation for the project in HTML format with the command
+`./gradlew dokka`.
+
+### Publish
+
+Publish the current version of the project to the local Maven repository with
+the command `./gradlew publish`.
 
 [build-image]: https://travis-ci.com/hubbards/xpath-kotlin.svg?branch=master
 [build]: https://travis-ci.com/hubbards/xpath-kotlin
