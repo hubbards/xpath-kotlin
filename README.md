@@ -46,16 +46,6 @@ Build the project with the command `./gradlew build`.
 
 Run the unit tests for the project with the command `./gradlew test`.
 
-### Document
-
-Generate documentation for the project in HTML format with the command
-`./gradlew dokka`.
-
-### Publish
-
-Publish the current version of the project to the local Maven repository with
-the command `./gradlew publish`.
-
 [build-image]: https://travis-ci.com/hubbards/xpath-kotlin.svg?branch=master
 [build]: https://travis-ci.com/hubbards/xpath-kotlin
 [download-image]: https://api.bintray.com/packages/hubbards/maven/xpath-kotlin/images/download.svg
