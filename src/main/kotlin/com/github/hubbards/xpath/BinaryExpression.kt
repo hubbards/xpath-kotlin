@@ -1,7 +1,7 @@
 package com.github.hubbards.xpath
 
 class BinaryExpression internal constructor(
-    val operator: Operator,
+    internal val operator: Operator,
     val left: Expression,
     val right: Expression
 ) : OperatorExpression() {

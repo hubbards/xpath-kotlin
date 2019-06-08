@@ -9,7 +9,7 @@ internal const val NODE_TEST = "node()"
  * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Location-Steps).
  */
 class Step internal constructor(
-    val axis: Axis = CHILD,
+    internal val axis: Axis = CHILD,
     val node: String = NODE_TEST
 ) : Syntax {
   val predicates = mutableListOf<Expression>()
