@@ -33,7 +33,8 @@ fun count(argument: Expression) =
 /**
  * Returns true if [argument] is false, and false otherwise.
  */
-fun not(argument: Expression) = FunctionCall("not", argument)
+fun not(argument: Expression) =
+    FunctionCall("not", argument)
 
 /**
  * Returns the local part of the expanded-name of the first node in [argument]
