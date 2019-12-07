@@ -1,0 +1,9 @@
+# see https://git-scm.com/docs/gitattributes
+
+# ensure all text files have line endings normalized
+# i.e., set to LF in repository
+* text=auto
+
+# set working directory line ending for Gradle wrapper scripts
+gradlew text eol=lf
+gradlew.bat text eol=crlf
