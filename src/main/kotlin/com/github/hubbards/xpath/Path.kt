@@ -14,27 +14,51 @@ sealed class Path : Expression() {
     steps.add(step)
   }
 
+  /**
+   * Add self axis step to this path.
+   */
   fun self(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
       doInit(Step(SELF, node), init)
 
+  /**
+   * Add child axis step to this path.
+   */
   fun child(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
       doInit(Step(CHILD, node), init)
 
+  /**
+   * Add parent axis step to this path.
+   */
   fun parent(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
       doInit(Step(PARENT, node), init)
 
+  /**
+   * Add descendant axis step to this path.
+   */
   fun descendant(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
       doInit(Step(DESCENDANT, node), init)
 
+  /**
+   * Add ancestor axis step to this path.
+   */
   fun ancestor(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
       doInit(Step(ANCESTOR, node), init)
 
+  /**
+   * Add descendant-or-self axis step to this path.
+   */
   fun descendantOrSelf(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
       doInit(Step(DESCENDANT_OR_SELF, node), init)
 
+  /**
+   * Add ancestor-or-self axis step to this path.
+   */
   fun ancestorOrSelf(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
       doInit(Step(ANCESTOR_OR_SELF, node), init)
 
+  /**
+   * Add attribute axis step to this path.
+   */
   fun attribute(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
       doInit(Step(ATTRIBUTE, node), init)
 }
