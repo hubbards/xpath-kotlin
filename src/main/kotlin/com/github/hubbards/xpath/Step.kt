@@ -12,8 +12,17 @@ class Step internal constructor(
     internal val axis: Axis = CHILD,
     val node: String = NODE_TEST
 ) : Syntax {
-  // TODO: make private and
-  val predicates = mutableListOf<Expression>()
+  private val predicates = mutableListOf<Expression>()
+
+  internal val hasNoPredicates: Boolean
+      get() = predicates.isEmpty()
+
+  /**
+   * Add [expression] predicate to this step.
+   */
+  fun predicate(expression: Expression) {
+    predicates += expression
+  }
 
   override fun abbreviated() =
       when {
@@ -22,9 +31,9 @@ class Step internal constructor(
         // abbreviated syntax for attribute::
         axis == ATTRIBUTE -> "@$node"
         // abbreviated syntax for self::node()
-        axis == SELF && node == NODE_TEST && predicates.isEmpty() -> "."
+        axis == SELF && node == NODE_TEST && hasNoPredicates -> "."
         // abbreviated syntax for parent::node()
-        axis == PARENT && node == NODE_TEST && predicates.isEmpty() -> ".."
+        axis == PARENT && node == NODE_TEST && hasNoPredicates -> ".."
         // unabbreviated syntax
         else -> "$axis::$node"
       } + predicates.joinToString("") { "[${it.abbreviated()}]" }

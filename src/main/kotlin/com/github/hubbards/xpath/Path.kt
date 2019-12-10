@@ -10,8 +10,7 @@ sealed class Path : Expression() {
   protected val steps = mutableListOf<Step>()
 
   private fun doInit(step: Step, init: Step.() -> Unit) {
-    step.init()
-    steps.add(step)
+    steps += step.apply(init)
   }
 
   /**
@@ -130,7 +129,7 @@ class AbsolutePath(init: Path.() -> Unit) : Path() {
 private fun helper(step: Step) =
     if (step.axis == DESCENDANT_OR_SELF &&
         step.node == NODE_TEST &&
-        step.predicates.isEmpty())
+        step.hasNoPredicates)
       ""
     else
       step.abbreviated()

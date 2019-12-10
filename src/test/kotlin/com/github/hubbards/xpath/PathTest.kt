@@ -23,7 +23,7 @@ class PathTest {
       child("para") {
         val l = RelativePath { attribute("type") }
         val r = LiteralString("warning")
-        predicates += l equal r
+        predicate(l equal r)
       }
     }
     assertEquals(

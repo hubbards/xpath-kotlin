@@ -39,7 +39,7 @@ class XPathTest {
       child("Star") {
         val l = RelativePath { attribute("starID") }
         val r = LiteralString("cf")
-        predicates += l equal r
+        predicate(l equal r)
       }
     }
     val s1 = InputSource(path)
