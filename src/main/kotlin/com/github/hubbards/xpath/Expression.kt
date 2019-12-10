@@ -32,7 +32,7 @@ abstract class Expression : Syntax {
       BinaryExpression(OR, this, e)
 
   operator fun unaryMinus() =
-      UnaryExpression(this)
+      UnaryMinusExpression(this)
 
   operator fun plus(e: Expression) =
       BinaryExpression(PLUS, this, e)

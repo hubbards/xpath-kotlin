@@ -51,4 +51,16 @@ class ExpressionTest {
         actual = e.abbreviated()
     )
   }
+
+  @Test
+  fun nestedBinaryExpressionSyntax() {
+    val e = run {
+      val one = LiteralNumber(1)
+      val two = LiteralNumber(2)
+      val three = LiteralNumber(3)
+      three * (two - one)
+    }
+    assertEquals(expected = "3 * (2 - 1)", actual = e.unabbreviated())
+    assertEquals(expected = e.unabbreviated(), actual = e.abbreviated())
+  }
 }

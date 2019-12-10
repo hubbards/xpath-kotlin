@@ -12,6 +12,7 @@ class Step internal constructor(
     internal val axis: Axis = CHILD,
     val node: String = NODE_TEST
 ) : Syntax {
+  // TODO: make private and
   val predicates = mutableListOf<Expression>()
 
   override fun abbreviated() =
