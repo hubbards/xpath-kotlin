@@ -5,7 +5,6 @@ class BinaryExpression internal constructor(
     val left: Expression,
     val right: Expression
 ) : Expression() {
-  // TODO refactor using StringBuild buildString pattern
   private fun helper(transform: (Expression) -> String) =
       buildString {
         val l = transform(left)

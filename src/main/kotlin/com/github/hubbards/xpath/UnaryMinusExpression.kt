@@ -5,7 +5,6 @@ import com.github.hubbards.xpath.Operator.MINUS
 class UnaryMinusExpression internal constructor(
     val expression: Expression
 ) : Expression() {
-  // TODO refactor using StringBuild buildString pattern
   private fun helper(string: String) =
       buildString {
         append(MINUS)
