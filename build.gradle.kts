@@ -1,4 +1,4 @@
-//import com.jfrog.bintray.gradle.BintrayExtension
+import com.jfrog.bintray.gradle.BintrayExtension
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.dokka.gradle.DokkaTask
 
@@ -11,7 +11,7 @@ plugins {
   kotlin("jvm") version "1.3.31"
 
   id("org.jetbrains.dokka") version "0.9.18"
-  //id("com.jfrog.bintray") version "1.8.4"
+  id("com.jfrog.bintray") version "1.8.4"
 }
 
 repositories {
@@ -65,23 +65,19 @@ publishing {
   }
 }
 
-// when publishing, run ./gradlew build bintrayUpload -Puser=... -Pkey=...
+bintray {
+  user = System.getenv("BINTRAY_USER_NAME")
+  key = System.getenv("BINTRAY_API_KEY")
 
-//bintray {
-//  fun findProperty(s: String) = project.findProperty(s) as String?
-//
-//  user = findProperty("user")
-//  key = findProperty("key")
-//
-//  setPublications("default")
-//
-//  pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-//    repo = "maven"
-//    name = "xpath-kotlin"
-//    vcsUrl = "https://github.com/hubbards/xpath-kotlin.git"
-//    setLicenses("MIT")
-//    version(delegateClosureOf<BintrayExtension.VersionConfig> {
-//      name = project.version.toString()
-//    })
-//  })
-//}
+  setPublications("default")
+
+  pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
+    repo = "maven"
+    name = "xpath-kotlin"
+    vcsUrl = "https://github.com/hubbards/xpath-kotlin.git"
+    setLicenses("MIT")
+    version(delegateClosureOf<BintrayExtension.VersionConfig> {
+      name = project.version.toString()
+    })
+  })
+}
