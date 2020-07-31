@@ -1,12 +1,11 @@
 # xpath-kotlin
 
-[![Build][build-image]][build]
-[![Download][download-image]][download]
+[![Build][build-badge]][build]
+[![Download][download-badge]][download]
 
 This project contains a shallow embedded domain-specific language (DSL) of
 [XPath][xpath] in Kotlin. More pragmatically, this DSL is a type-safe builder
 for XPath expressions.
-
 
 ## Introduction
 
@@ -46,10 +45,12 @@ Build the project with the command `./gradlew build`.
 
 Run the unit tests for the project with the command `./gradlew test`.
 
-[build-image]: https://travis-ci.com/hubbards/xpath-kotlin.svg?branch=master
-[build]: https://travis-ci.com/hubbards/xpath-kotlin
-[download-image]: https://api.bintray.com/packages/hubbards/maven/xpath-kotlin/images/download.svg
+[build-badge]: https://github.com/hubbards/xpath-kotlin/workflows/Build/badge.svg
+[build]: https://github.com/hubbards/xpath-kotlin
+
+[download-badge]: https://api.bintray.com/packages/hubbards/maven/xpath-kotlin/images/download.svg
 [download]: https://bintray.com/hubbards/maven/xpath-kotlin/_latestVersion
+
 [javax.xml.xpath]: https://docs.oracle.com/javase/8/docs/api/javax/xml/xpath/package-summary.html
 [String]: https://docs.oracle.com/javase/8/docs/api/java/lang/String.html
 [xpath]: https://www.w3.org/TR/1999/REC-xpath-19991116
