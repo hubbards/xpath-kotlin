@@ -8,8 +8,6 @@ class BinaryExpression internal constructor(
   private fun helper(transform: (Expression) -> String) =
       buildString {
         val l = transform(left)
-        // binary operators are left associative
-        // op >= op' implies x op y op' z == (x op y) op' z
         if (left is BinaryExpression && left.operator < operator) {
           append('(')
           append(l)
@@ -23,7 +21,7 @@ class BinaryExpression internal constructor(
         append(' ')
 
         val r = transform(right)
-        if (right is BinaryExpression) {
+        if (right is BinaryExpression && right.operator <= operator) {
           append('(')
           append(r)
           append(')')

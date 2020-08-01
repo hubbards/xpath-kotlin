@@ -53,6 +53,30 @@ class ExpressionTest {
   }
 
   @Test
+  fun leftNestedBinaryExpressionSyntax() {
+    val e = run {
+      val one = LiteralNumber(1)
+      val two = LiteralNumber(2)
+      val three = LiteralNumber(3)
+      (two - one) * three
+    }
+    assertEquals(expected = "(2 - 1) * 3", actual = e.unabbreviated())
+    assertEquals(expected = e.unabbreviated(), actual = e.abbreviated())
+  }
+
+  @Test
+  fun leftNestedBinaryExpressionNoParenthesesSyntax() {
+    val e = run {
+      val one = LiteralNumber(1)
+      val two = LiteralNumber(2)
+      val three = LiteralNumber(3)
+      (one + two) + three
+    }
+    assertEquals(expected = "1 + 2 + 3", actual = e.unabbreviated())
+    assertEquals(expected = e.unabbreviated(), actual = e.abbreviated())
+  }
+
+  @Test
   fun rightNestedBinaryExpressionSyntax() {
     val e = run {
       val one = LiteralNumber(1)
@@ -65,14 +89,14 @@ class ExpressionTest {
   }
 
   @Test
-  fun leftNestedBinaryExpressionSyntax() {
+  fun rightNestedBinaryExpressionNoParenthesesSyntax() {
     val e = run {
       val one = LiteralNumber(1)
       val two = LiteralNumber(2)
       val three = LiteralNumber(3)
-      (two - one) * three
+      one + (two * three)
     }
-    assertEquals(expected = "(2 - 1) * 3", actual = e.unabbreviated())
+    assertEquals(expected = "1 + 2 * 3", actual = e.unabbreviated())
     assertEquals(expected = e.unabbreviated(), actual = e.abbreviated())
   }
 }
