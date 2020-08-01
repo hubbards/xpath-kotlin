@@ -9,7 +9,7 @@ version = "0.0.3"
 plugins {
   `maven-publish`
 
-  kotlin("jvm") version "1.3.31"
+  kotlin("jvm") version "1.3.72"
 
   id("org.jetbrains.dokka") version "0.9.18"
   id("com.jfrog.bintray") version "1.8.4"
