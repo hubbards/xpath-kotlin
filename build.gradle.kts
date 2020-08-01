@@ -1,6 +1,7 @@
-import com.jfrog.bintray.gradle.BintrayExtension
 import org.gradle.jvm.tasks.Jar
-import org.jetbrains.dokka.gradle.DokkaTask
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+import com.jfrog.bintray.gradle.BintrayExtension
 
 group = "com.github.hubbards"
 version = "0.0.3"
@@ -25,7 +26,17 @@ dependencies {
   testImplementation(kotlin(module = "test"))
 }
 
-tasks.named<DokkaTask>("dokka") {
+tasks.test {
+  useJUnit()
+
+  testLogging {
+    events.add(TestLogEvent.FAILED)
+    events.add(TestLogEvent.SKIPPED)
+    events.add(TestLogEvent.PASSED)
+  }
+}
+
+tasks.dokka {
   outputFormat = "html"
   outputDirectory = "$buildDir/javadoc"
 }
