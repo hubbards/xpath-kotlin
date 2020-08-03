@@ -36,5 +36,5 @@ out
 # IntelliJ IDEA directory
 .idea
 
-# Mac/OSX system file
+# macOS system file
 .DS_Store
