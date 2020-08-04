@@ -35,22 +35,3 @@ jobs:
       with:
         name: docs
         path: ./build/javadoc
-  pages:
-    needs: build
-    if: ${{ github.ref == 'master' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
-        with:
-          ref: gh-pages
-      - name: Download test report
-        uses: actions/download-artifact@v2
-        with:
-          name: test-report
-      - name: Download documentation
-        uses: actions/download-artifact@v2
-        with:
-          name: docs
-      # TODO stage and push changes using REST API,
-      # see https://docs.github.com/en/rest
