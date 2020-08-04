@@ -30,3 +30,8 @@ jobs:
       with:
         name: test-report
         path: ./build/reports/tests/test
+    - name: Upload documentation
+      uses: actions/upload-artifact@v2
+      with:
+        name: docs
+        path: ./build/javadoc
