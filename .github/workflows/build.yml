@@ -23,3 +23,5 @@ jobs:
       run: chmod +x gradlew
     - name: Run Gradle build task
       run: ./gradlew build
+    - name: Run Gradle dokka task
+      run: ./gradlew dokka
