@@ -23,3 +23,15 @@ jobs:
       run: chmod +x gradlew
     - name: Run Gradle build task
       run: ./gradlew build
+    - name: Run Gradle dokka task
+      run: ./gradlew dokka
+    - name: Upload test report
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-report
+        path: ./build/reports/tests/test
+    - name: Upload documentation
+      uses: actions/upload-artifact@v2
+      with:
+        name: docs
+        path: ./build/javadoc
