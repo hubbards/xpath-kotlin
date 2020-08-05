@@ -1,0 +1,32 @@
+# Run unit tests automatically using github actions
+# see https://docs.github.com/en/actions
+
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x gradlew
+      - name: Run Gradle test task
+        run: ./gradlew test
+      - name: Upload test report artifact
+        uses: actions/upload-artifact@v2
+          with:
+            name: test-report
+            path: ./build/reports/tests/test

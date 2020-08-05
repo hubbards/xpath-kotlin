@@ -1,6 +1,6 @@
 # xpath-kotlin
 
-[![Build][build-badge]][build]
+[![Test][test-badge]][test]
 [![Download][download-badge]][download]
 
 This project contains a shallow embedded domain-specific language (DSL) of
@@ -45,8 +45,8 @@ Build the project with the command `./gradlew build`.
 
 Run the unit tests for the project with the command `./gradlew test`.
 
-[build-badge]: https://github.com/hubbards/xpath-kotlin/workflows/Build/badge.svg
-[build]: https://github.com/hubbards/xpath-kotlin
+[test-badge]: https://github.com/hubbards/xpath-kotlin/workflows/Test/badge.svg
+[test]: https://github.com/hubbards/xpath-kotlin
 
 [download-badge]: https://api.bintray.com/packages/hubbards/maven/xpath-kotlin/images/download.svg
 [download]: https://bintray.com/hubbards/maven/xpath-kotlin/_latestVersion
