@@ -45,12 +45,6 @@ Build the project with the command `./gradlew build`.
 
 Run the unit tests for the project with the command `./gradlew test`.
 
-## TODO List
-
-- Publish documentation to [GitHub pages][pages]
-- Publish test report to [GitHub pages][pages]
-- Publish library to [GitHub packages][packages]
-
 [build-badge]: https://github.com/hubbards/xpath-kotlin/workflows/Build/badge.svg
 [build]: https://github.com/hubbards/xpath-kotlin
 
@@ -60,6 +54,3 @@ Run the unit tests for the project with the command `./gradlew test`.
 [javax.xml.xpath]: https://docs.oracle.com/javase/8/docs/api/javax/xml/xpath/package-summary.html
 [String]: https://docs.oracle.com/javase/8/docs/api/java/lang/String.html
 [xpath]: https://www.w3.org/TR/1999/REC-xpath-19991116
-
-[pages]: https://docs.github.com/en/pages
-[packages]: https://docs.github.com/en/packages
