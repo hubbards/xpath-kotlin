@@ -35,7 +35,7 @@ may safely skip this section.
 
 We will assume that this project exists locally and we are logged into a shell
 where the working directory is the root of the project. We will also assume that
-JDK version 8 or higher is installed.
+Java version 8 or higher is installed.
 
 ### Build
 
