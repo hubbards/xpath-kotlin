@@ -52,6 +52,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: docs
-      # TODO replace next step w/ steps to commit and push
-      - name: Run git-status command
-        run: git status
+      - name: Update test report and documentation
+        run: |
+          git config user.name "Spencer Hubbard"
+          git config user.email hubbardspencerm@gmail.com
+          git add test-report docs
+          git commit -m "generated"
+          git push
