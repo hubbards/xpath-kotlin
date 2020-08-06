@@ -91,4 +91,22 @@ class PathTest {
         actual = p.abbreviated
     )
   }
+
+  @Test
+  fun predicateSyntax() {
+    val p = relative {
+      child("para") {
+        predicate(relative { attribute("type") } equal LiteralString("warning"))
+        predicate(LiteralNumber(5))
+      }
+    }
+    assertEquals(
+        expected = "child::para[attribute::type = 'warning'][5]",
+        actual = p.unabbreviated
+    )
+    assertEquals(
+        expected = "para[@type = 'warning'][5]",
+        actual = p.abbreviated
+    )
+  }
 }
