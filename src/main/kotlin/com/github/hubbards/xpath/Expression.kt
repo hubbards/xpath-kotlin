@@ -261,48 +261,56 @@ sealed class Expression : Syntax {
       /**
        * Add self axis step to this path
        */
+      @JvmOverloads
       fun self(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.SELF, node), init)
 
       /**
        * Add child axis step to this path
        */
+      @JvmOverloads
       fun child(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.CHILD, node), init)
 
       /**
        * Add parent axis step to this path
        */
+      @JvmOverloads
       fun parent(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.PARENT, node), init)
 
       /**
        * Add descendant axis step to this path
        */
+      @JvmOverloads
       fun descendant(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.DESCENDANT, node), init)
 
       /**
        * Add ancestor axis step to this path
        */
+      @JvmOverloads
       fun ancestor(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.ANCESTOR, node), init)
 
       /**
        * Add descendant-or-self axis step to this path
        */
+      @JvmOverloads
       fun descendantOrSelf(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.DESCENDANT_OR_SELF, node), init)
 
       /**
        * Add ancestor-or-self axis step to this path
        */
+      @JvmOverloads
       fun ancestorOrSelf(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, node), init)
 
       /**
        * Add attribute axis step to this path
        */
+      @JvmOverloads
       fun attribute(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.ATTRIBUTE, node), init)
     }
