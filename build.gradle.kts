@@ -26,6 +26,13 @@ dependencies {
   testImplementation(kotlin(module = "test"))
 }
 
+tasks.compileKotlin {
+  kotlinOptions {
+    jvmTarget = "1.8"
+    freeCompilerArgs += "-Xjvm-default=enable"
+  }
+}
+
 tasks.test {
   useJUnit()
 
