@@ -25,7 +25,7 @@ class ExpressionTest {
 
   @Test
   fun functionCallSyntax() {
-    val e = localName(absolute { descendant("img"); parent("node()") })
+    val e = localName(absolute { descendant("img"); parent() })
     assertEquals(
         expected = "local-name(/descendant::img/parent::node())",
         actual = e.unabbreviated
