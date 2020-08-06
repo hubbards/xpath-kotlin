@@ -5,7 +5,7 @@ package com.github.hubbards.xpath
  * (binary) precedence, from lowest to highest, and [compareTo] defines a linear
  * extension of this order.
  */
-internal enum class Operator {
+enum class Operator {
   OR,
   AND,
   EQUAL,

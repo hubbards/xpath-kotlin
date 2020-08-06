@@ -1,7 +1,8 @@
 package com.github.hubbards.xpath
 
-// TODO: add missing axes
-internal enum class Axis {
+// TODO document
+enum class Axis {
+  // TODO add missing axes
   SELF,
   CHILD,
   PARENT,
@@ -12,5 +13,5 @@ internal enum class Axis {
   ATTRIBUTE;
 
   override fun toString() =
-      this.name.toLowerCase().replace('_', '-')
+      name.toLowerCase().replace('_', '-')
 }

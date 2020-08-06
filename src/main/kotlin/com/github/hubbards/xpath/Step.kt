@@ -1,46 +1,80 @@
 package com.github.hubbards.xpath
 
-import com.github.hubbards.xpath.Axis.*
-
-internal const val NODE_TEST = "node()"
-
 /**
  * A location step, see
  * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Location-Steps).
  */
-class Step internal constructor(
-    internal val axis: Axis = CHILD,
-    val node: String = NODE_TEST
-) : Syntax {
-  private val predicates = mutableListOf<Expression>()
+data class Step(val axis: Axis = Axis.CHILD,
+                val node: String = NODE,
+                val predicates: List<Expression> = emptyList()) : Syntax {
+  override val unabbreviated =
+      buildString {
+        append(axis)
+        append(':')
+        append(':')
+        append(node)
+        for (predicate in predicates) {
+          brackets(predicate.unabbreviated)
+        }
+      }
 
-  internal val hasNoPredicates: Boolean
-      get() = predicates.isEmpty()
+  override val abbreviated =
+      buildString {
+        when {
+          // abbreviated syntax for child::
+          axis == Axis.CHILD ->
+            append(node)
+          // abbreviated syntax for attribute::
+          axis == Axis.ATTRIBUTE -> {
+            append('@')
+            append(node)
+          }
+          // abbreviated syntax for self::node()
+          axis == Axis.SELF && node == NODE && predicates.isEmpty() ->
+            append('.')
+          // abbreviated syntax for parent::node()
+          axis == Axis.PARENT && node == NODE && predicates.isEmpty() -> {
+            append('.')
+            append('.')
+          }
+          // unabbreviated syntax
+          else -> {
+            append(axis)
+            append(':')
+            append(':')
+            append(node)
+          }
+        }
+        for (predicate in predicates) {
+          brackets(predicate.abbreviated)
+        }
+      }
 
-  /**
-   * Add [expression] predicate to this step.
-   */
-  fun predicate(expression: Expression) {
-    predicates += expression
+  // TODO document
+  class Builder(val axis: Axis = Axis.CHILD, val node: String = NODE) {
+    private val predicates: MutableList<Expression> = mutableListOf()
+
+    /**
+     * Add [expression] predicate to this builder
+     */
+    fun predicate(expression: Expression) =
+        predicates.add(expression)
+
+    // TODO document
+    fun build(): Step =
+        Step(axis = axis,
+                                                          node = node,
+                                                          predicates = predicates.toList())
   }
 
-  override fun abbreviated() =
-      when {
-        // abbreviated syntax for child::
-        axis == CHILD -> node
-        // abbreviated syntax for attribute::
-        axis == ATTRIBUTE -> "@$node"
-        // abbreviated syntax for self::node()
-        axis == SELF && node == NODE_TEST && hasNoPredicates -> "."
-        // abbreviated syntax for parent::node()
-        axis == PARENT && node == NODE_TEST && hasNoPredicates -> ".."
-        // unabbreviated syntax
-        else -> "$axis::$node"
-      } + predicates.joinToString("") { "[${it.abbreviated()}]" }
+  companion object {
+    // TODO replace with NodeTest type
+    const val NODE: String = "node()"
 
-  override fun unabbreviated() =
-      "$axis::$node" + predicates.joinToString("") { "[${it.unabbreviated()}]" }
-
-  override fun toString() =
-      abbreviated()
+    private fun StringBuilder.brackets(string: String) {
+      append('[')
+      append(string)
+      append(']')
+    }
+  }
 }
