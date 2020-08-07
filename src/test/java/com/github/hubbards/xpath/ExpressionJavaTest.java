@@ -20,27 +20,34 @@ public class ExpressionJavaTest {
 
     @Test
     public void functionCallSyntax() {
-        Expression.Path.Builder builder = new Expression.Path.Builder();
-        builder.descendant("img");
-        builder.parent();
-        Expression expression = Expression.FunctionCall.Companion.localName(builder.absolute());
+        Expression expression = Expression.FunctionCall.Companion.localName(
+                new Expression.Path.Absolute(
+                        new Step(Axis.DESCENDANT, "img"),
+                        new Step(Axis.PARENT, Step.NODE)
+                )
+        );
         Assert.assertEquals("local-name(/descendant::img/parent::node())", expression.getUnabbreviated());
         Assert.assertEquals("local-name(/descendant::img/..)", expression.getAbbreviated());
     }
 
     @Test
     public void binaryExpressionSyntax() {
-        Expression.Path.Builder builder = new Expression.Path.Builder();
-        builder.descendantOrSelf();
-        builder.child("ol");
-        builder.child("li");
-        Expression right = Expression.FunctionCall.Companion.count(builder.absolute());
-        Expression left = new Expression.LiteralNumber(3);
-        Expression expression = new Expression.BinaryExpression(Operator.GREATER_THAN, left, right);
+        Expression expression = new Expression.BinaryExpression(
+                Operator.GREATER_THAN,
+                new Expression.LiteralNumber(3),
+                Expression.FunctionCall.Companion.count(new Expression.Path.Absolute(
+                        new Step(Axis.DESCENDANT_OR_SELF, Step.NODE),
+                        new Step(Axis.CHILD, "ol"),
+                        new Step(Axis.CHILD, "li")
+                ))
+        );
         Assert.assertEquals(
                 "3 > count(/descendant-or-self::node()/child::ol/child::li)",
                 expression.getUnabbreviated()
         );
-        Assert.assertEquals("3 > count(//ol/li)", expression.getAbbreviated());
+        Assert.assertEquals(
+                "3 > count(//ol/li)",
+                expression.getAbbreviated()
+        );
     }
 }
