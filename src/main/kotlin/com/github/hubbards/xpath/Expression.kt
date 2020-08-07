@@ -134,7 +134,6 @@ sealed class Expression : Syntax {
    */
   data class FunctionCall(val name: String,
                           val arguments: List<Expression> = emptyList()) : Expression() {
-
     constructor(name: String, vararg arguments: Expression) : this(name, arguments.toList())
 
     override val unabbreviated =
@@ -190,6 +189,8 @@ sealed class Expression : Syntax {
 
     // TODO document
     data class Absolute(override val steps: List<Step>) : Path() {
+      constructor(vararg steps: Step) : this(steps.toList())
+
       override val unabbreviated =
           steps.joinToString(separator = "/",
                              prefix = "/",
@@ -213,6 +214,8 @@ sealed class Expression : Syntax {
 
     // TODO document
     data class Relative(override val steps: List<Step>) : Path() {
+      constructor(vararg steps: Step) : this(steps.toList())
+
       override val unabbreviated =
           steps.joinToString(separator = "/",
                              transform = Step::unabbreviated)
@@ -261,56 +264,48 @@ sealed class Expression : Syntax {
       /**
        * Add self axis step to this path
        */
-      @JvmOverloads
       fun self(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.SELF, node), init)
 
       /**
        * Add child axis step to this path
        */
-      @JvmOverloads
       fun child(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.CHILD, node), init)
 
       /**
        * Add parent axis step to this path
        */
-      @JvmOverloads
       fun parent(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.PARENT, node), init)
 
       /**
        * Add descendant axis step to this path
        */
-      @JvmOverloads
       fun descendant(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.DESCENDANT, node), init)
 
       /**
        * Add ancestor axis step to this path
        */
-      @JvmOverloads
       fun ancestor(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.ANCESTOR, node), init)
 
       /**
        * Add descendant-or-self axis step to this path
        */
-      @JvmOverloads
       fun descendantOrSelf(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.DESCENDANT_OR_SELF, node), init)
 
       /**
        * Add ancestor-or-self axis step to this path
        */
-      @JvmOverloads
       fun ancestorOrSelf(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, node), init)
 
       /**
        * Add attribute axis step to this path
        */
-      @JvmOverloads
       fun attribute(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.ATTRIBUTE, node), init)
     }

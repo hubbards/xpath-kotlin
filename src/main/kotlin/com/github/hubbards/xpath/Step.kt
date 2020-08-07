@@ -4,9 +4,17 @@ package com.github.hubbards.xpath
  * A location step, see
  * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Location-Steps).
  */
-data class Step(val axis: Axis = Axis.CHILD,
-                val node: String = NODE,
-                val predicates: List<Expression> = emptyList()) : Syntax {
+data class Step(
+    val axis: Axis = Axis.CHILD,
+    val node: String = NODE,
+    val predicates: List<Expression> = emptyList()
+) : Syntax {
+  constructor(
+      axis: Axis = Axis.CHILD,
+      node: String = NODE,
+      vararg predicates: Expression
+  ) : this(axis, node, predicates.toList())
+
   override val unabbreviated =
       buildString {
         append(axis)
@@ -62,9 +70,7 @@ data class Step(val axis: Axis = Axis.CHILD,
 
     // TODO document
     fun build(): Step =
-        Step(axis = axis,
-                                                          node = node,
-                                                          predicates = predicates.toList())
+        Step(axis = axis, node = node, predicates = predicates.toList())
   }
 
   companion object {
