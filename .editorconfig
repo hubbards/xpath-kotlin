@@ -4,7 +4,7 @@
 root = true
 
 # XML/HTML section
-[*.{xml, html}]
+[*.{xml,html}]
 indent_size = 4
 indent_style = space
 trim_trailing_whitespace = true
@@ -12,7 +12,7 @@ insert_final_newline = true
 
 # Kotlin section
 # https://github.com/pinterest/ktlint#editorconfig
-[*.{kt, kts}]
+[*.{kt,kts}]
 indent_size = 2
 indent_style = space
 trim_trailing_whitespace = true
