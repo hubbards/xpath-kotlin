@@ -57,7 +57,9 @@ data class Step(
     }
   }
 
-  // TODO document
+  /**
+   * A location step builder.
+   */
   class Builder(
     val axis: Axis = Axis.CHILD,
     val node: String = NODE
@@ -70,7 +72,9 @@ data class Step(
     fun predicate(expression: Expression) =
       predicates.add(expression)
 
-    // TODO document
+    /**
+     * Build a location step
+     */
     fun build(): Step =
       Step(axis = axis, node = node, predicates = predicates.toList())
   }

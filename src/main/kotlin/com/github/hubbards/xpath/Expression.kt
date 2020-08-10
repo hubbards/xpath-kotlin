@@ -168,7 +168,7 @@ sealed class Expression : Syntax {
     // TODO add builder using invoke convention
 
     /**
-     * Helpers for building function calls for the
+     * Helpers for building function calls from the
      * [core function library][specification].
      *
      * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#corelib
@@ -303,6 +303,9 @@ sealed class Expression : Syntax {
        */
       fun number(argument: Expression?): FunctionCall =
         FunctionCall("number", argument)
+
+      // TODO add other number functions
+
     }
   }
 
@@ -369,7 +372,9 @@ sealed class Expression : Syntax {
       }
     }
 
-    // TODO document
+    /**
+     * A location path builder.
+     */
     class Builder {
       private val steps: MutableList<Step> = mutableListOf()
 
