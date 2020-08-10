@@ -3,15 +3,13 @@ package com.github.hubbards.xpath
 import com.github.hubbards.xpath.Expression.*
 import com.github.hubbards.xpath.Expression.Path.Companion.absolute
 import com.github.hubbards.xpath.Expression.Path.Companion.relative
-
+import org.junit.Before
+import org.junit.Test
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 import org.xml.sax.InputSource
 import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
-
-import org.junit.Before
-import org.junit.Test
 import kotlin.test.assertEquals
 
 class XPathTest {

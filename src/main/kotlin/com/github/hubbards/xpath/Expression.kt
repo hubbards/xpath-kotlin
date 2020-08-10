@@ -6,49 +6,49 @@ package com.github.hubbards.xpath
  */
 sealed class Expression : Syntax {
   infix fun equal(other: Expression): Expression =
-      BinaryExpression(Operator.EQUAL, this, other)
+    BinaryExpression(Operator.EQUAL, this, other)
 
   infix fun notEqual(other: Expression) =
-      BinaryExpression(Operator.NOT_EQUAL, this, other)
+    BinaryExpression(Operator.NOT_EQUAL, this, other)
 
   infix fun greaterThan(other: Expression) =
-      BinaryExpression(Operator.GREATER_THAN, this, other)
+    BinaryExpression(Operator.GREATER_THAN, this, other)
 
   infix fun lessThan(other: Expression) =
-      BinaryExpression(Operator.LESS_THAN, this, other)
+    BinaryExpression(Operator.LESS_THAN, this, other)
 
   infix fun greaterThanOrEqualTo(other: Expression) =
-      BinaryExpression(Operator.GREATER_THAN_OR_EQUAL_TO, this, other)
+    BinaryExpression(Operator.GREATER_THAN_OR_EQUAL_TO, this, other)
 
   infix fun lessThanOrEqualTo(other: Expression) =
-      BinaryExpression(Operator.LESS_THAN_OR_EQUAL_TO, this, other)
+    BinaryExpression(Operator.LESS_THAN_OR_EQUAL_TO, this, other)
 
   infix fun and(other: Expression) =
-      BinaryExpression(Operator.AND, this, other)
+    BinaryExpression(Operator.AND, this, other)
 
   infix fun or(other: Expression) =
-      BinaryExpression(Operator.OR, this, other)
+    BinaryExpression(Operator.OR, this, other)
 
   operator fun unaryMinus(): Expression =
-      UnaryMinusExpression(this)
+    UnaryMinusExpression(this)
 
   operator fun plus(other: Expression): Expression =
-      BinaryExpression(Operator.PLUS, this, other)
+    BinaryExpression(Operator.PLUS, this, other)
 
   operator fun minus(other: Expression) =
-      BinaryExpression(Operator.MINUS, this, other)
+    BinaryExpression(Operator.MINUS, this, other)
 
   operator fun times(other: Expression) =
-      BinaryExpression(Operator.TIMES, this, other)
+    BinaryExpression(Operator.TIMES, this, other)
 
   operator fun div(other: Expression) =
-      BinaryExpression(Operator.DIVIDE, this, other)
+    BinaryExpression(Operator.DIVIDE, this, other)
 
   operator fun rem(other: Expression) =
-      BinaryExpression(Operator.MODULO, this, other)
+    BinaryExpression(Operator.MODULO, this, other)
 
   infix fun union(other: Expression) =
-      BinaryExpression(Operator.UNION, this, other)
+    BinaryExpression(Operator.UNION, this, other)
 
   /**
    * A number literal, see
@@ -56,7 +56,7 @@ sealed class Expression : Syntax {
    */
   data class LiteralNumber(val number: Number) : Expression() {
     override val unabbreviated =
-        number.toString()
+      number.toString()
   }
 
   /**
@@ -98,9 +98,11 @@ sealed class Expression : Syntax {
   /**
    * A binary XPath expression.
    */
-  data class BinaryExpression(val operator: Operator,
-                              val left: Expression,
-                              val right: Expression) : Expression() {
+  data class BinaryExpression(
+    val operator: Operator,
+    val left: Expression,
+    val right: Expression
+  ) : Expression() {
     override val unabbreviated: String = buildString {
       if (left is BinaryExpression && left.operator < operator)
         parenthesize(left.unabbreviated)
@@ -135,20 +137,26 @@ sealed class Expression : Syntax {
    * A function call expression, see
    * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Function-Calls).
    */
-  data class FunctionCall(val name: String,
-                          val arguments: List<Expression> = emptyList()) : Expression() {
+  data class FunctionCall(
+    val name: String,
+    val arguments: List<Expression> = emptyList()
+  ) : Expression() {
     constructor(name: String, vararg arguments: Expression) : this(name, arguments.toList())
 
     override val unabbreviated =
-        name + arguments.joinToString(prefix = "(",
-                                      postfix = ")",
-                                      transform = Expression::unabbreviated)
+      name + arguments.joinToString(
+        prefix = "(",
+        postfix = ")",
+        transform = Expression::unabbreviated
+      )
 
     // TODO eliminate duplicate code
     override val abbreviated =
-        name + arguments.joinToString(prefix = "(",
-                                      postfix = ")",
-                                      transform = Expression::abbreviated)
+      name + arguments.joinToString(
+        prefix = "(",
+        postfix = ")",
+        transform = Expression::abbreviated
+      )
 
     // TODO add builder using invoke convention
 
@@ -157,27 +165,27 @@ sealed class Expression : Syntax {
        * Function call which returns the number of nodes in [argument] node-set.
        */
       fun count(argument: Expression): FunctionCall =
-          FunctionCall("count", argument)
+        FunctionCall("count", argument)
 
       /**
        * Function call which returns true if [argument] is false, and false otherwise.
        */
       fun not(argument: Expression): FunctionCall =
-          FunctionCall("not", argument)
+        FunctionCall("not", argument)
 
       /**
        * Function call which returns the local part of the expanded-name of the
        * first node in [argument] node-set.
        */
       fun localName(argument: Expression): FunctionCall =
-          FunctionCall("local-name", argument)
+        FunctionCall("local-name", argument)
 
       /**
        * Function call which returns the local part of the expanded-name of the
        * context node.
        */
       val localName: FunctionCall =
-          FunctionCall("local-name")
+        FunctionCall("local-name")
 
       // TODO add missing standard functions
     }
@@ -197,15 +205,15 @@ sealed class Expression : Syntax {
       constructor(vararg steps: Step) : this(steps.toList())
 
       override val unabbreviated =
-          steps.joinToString(separator = "/", prefix = "/", transform = Step::unabbreviated)
+        steps.joinToString(separator = "/", prefix = "/", transform = Step::unabbreviated)
 
       // TODO eliminate duplicate code
       override val abbreviated = run {
         val last =
-            if (steps.isNotEmpty())
-              (if (steps.size > 1) "/" else "") + steps.last().abbreviated
-            else
-              ""
+          if (steps.isNotEmpty())
+          (if (steps.size > 1) "/" else "") + steps.last().abbreviated
+          else
+            ""
         steps.dropLast(1).joinToString(separator = "/", prefix = "/", postfix = last) {
           if (it.axis == Axis.DESCENDANT_OR_SELF && it.node == Step.NODE && it.predicates.isEmpty())
             ""
@@ -222,20 +230,20 @@ sealed class Expression : Syntax {
       constructor(vararg steps: Step) : this(steps.toList())
 
       override val unabbreviated =
-          steps.joinToString(separator = "/", transform = Step::unabbreviated)
+        steps.joinToString(separator = "/", transform = Step::unabbreviated)
 
       // TODO eliminate duplicate code
       override val abbreviated = run {
         val first =
-            if (steps.isNotEmpty())
-              steps.first().abbreviated + (if (steps.size > 1) "/" else "")
-            else
-              ""
+          if (steps.isNotEmpty())
+            steps.first().abbreviated + (if (steps.size > 1) "/" else "")
+          else
+            ""
         val last =
-            if (steps.size > 1)
-              (if (steps.size > 2) "/" else "") + steps.last().abbreviated
-            else
-              ""
+          if (steps.size > 1)
+          (if (steps.size > 2) "/" else "") + steps.last().abbreviated
+          else
+            ""
         steps.drop(1).dropLast(1).joinToString(separator = "/", prefix = first, postfix = last) {
           if (it.axis == Axis.DESCENDANT_OR_SELF && it.node == Step.NODE && it.predicates.isEmpty())
             ""
@@ -257,91 +265,91 @@ sealed class Expression : Syntax {
        * Build an absolute location path
        */
       fun absolute(): Absolute =
-          Absolute(steps.toList())
+        Absolute(steps.toList())
 
       /**
        * Build a relative location path
        */
       fun relative(): Relative =
-          Relative(steps.toList())
+        Relative(steps.toList())
 
       /**
        * Add self axis step to this path
        */
       fun self(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.SELF, node), init)
+        doInit(Step.Builder(Axis.SELF, node), init)
 
       /**
        * Add child axis step to this path
        */
       fun child(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.CHILD, node), init)
+        doInit(Step.Builder(Axis.CHILD, node), init)
 
       /**
        * Add parent axis step to this path
        */
       fun parent(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.PARENT, node), init)
+        doInit(Step.Builder(Axis.PARENT, node), init)
 
       /**
        * Add descendant axis step to this path
        */
       fun descendant(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.DESCENDANT, node), init)
+        doInit(Step.Builder(Axis.DESCENDANT, node), init)
 
       /**
        * Add ancestor axis step to this path
        */
       fun ancestor(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.ANCESTOR, node), init)
+        doInit(Step.Builder(Axis.ANCESTOR, node), init)
 
       /**
        * Add descendant-or-self axis step to this path
        */
       fun descendantOrSelf(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.DESCENDANT_OR_SELF, node), init)
+        doInit(Step.Builder(Axis.DESCENDANT_OR_SELF, node), init)
 
       /**
        * Add ancestor-or-self axis step to this path
        */
       fun ancestorOrSelf(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, node), init)
+        doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, node), init)
 
       /**
        * Add following axis step to this path
        */
       fun following(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.FOLLOWING, node), init)
+        doInit(Step.Builder(Axis.FOLLOWING, node), init)
 
       /**
        * Add preceding axis step to this path
        */
       fun preceding(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.PRECEDING, node), init)
+        doInit(Step.Builder(Axis.PRECEDING, node), init)
 
       /**
        * Add following-sibling axis step to this path
        */
       fun followingSibling(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.FOLLOWING_SIBLING, node), init)
+        doInit(Step.Builder(Axis.FOLLOWING_SIBLING, node), init)
 
       /**
        * Add preceding-sibling axis step to this path
        */
       fun precedingSibling(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.PRECEDING_SIBLING, node), init)
+        doInit(Step.Builder(Axis.PRECEDING_SIBLING, node), init)
 
       /**
        * Add attribute axis step to this path
        */
       fun attribute(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.ATTRIBUTE, node), init)
+        doInit(Step.Builder(Axis.ATTRIBUTE, node), init)
 
       /**
        * Add namespace axis step to this path
        */
       fun namespace(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
-          doInit(Step.Builder(Axis.NAMESPACE, node), init)
+        doInit(Step.Builder(Axis.NAMESPACE, node), init)
     }
 
     companion object {
@@ -349,13 +357,13 @@ sealed class Expression : Syntax {
        * An absolute location path.
        */
       fun absolute(init: Builder.() -> Unit): Absolute =
-          Builder().apply(init).absolute()
+        Builder().apply(init).absolute()
 
       /**
        * A relative location path.
        */
       fun relative(init: Builder.() -> Unit): Relative =
-          Builder().apply(init).relative()
+        Builder().apply(init).relative()
     }
   }
 

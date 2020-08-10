@@ -3,21 +3,20 @@ package com.github.hubbards.xpath
 import com.github.hubbards.xpath.Expression.*
 import com.github.hubbards.xpath.Expression.Path.Companion.absolute
 import com.github.hubbards.xpath.Expression.Path.Companion.relative
-
-import kotlin.test.assertEquals
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class PathTest {
   @Test
   fun childSyntax() {
     val p = relative { child("div"); child("para") }
     assertEquals(
-        expected = "child::div/child::para",
-        actual = p.unabbreviated
+      expected = "child::div/child::para",
+      actual = p.unabbreviated
     )
     assertEquals(
-        expected = "div/para",
-        actual = p.abbreviated
+      expected = "div/para",
+      actual = p.abbreviated
     )
   }
 
@@ -31,12 +30,12 @@ class PathTest {
       }
     }
     assertEquals(
-        expected = "child::para[attribute::type = 'warning']",
-        actual = p.unabbreviated
+      expected = "child::para[attribute::type = 'warning']",
+      actual = p.unabbreviated
     )
     assertEquals(
-        expected = "para[@type = 'warning']",
-        actual = p.abbreviated
+      expected = "para[@type = 'warning']",
+      actual = p.abbreviated
     )
   }
 
@@ -44,12 +43,12 @@ class PathTest {
   fun absolutePathDescendantOrSelfSyntax() {
     val p = absolute { descendantOrSelf(); child("para") }
     assertEquals(
-        expected = "/descendant-or-self::node()/child::para",
-        actual = p.unabbreviated
+      expected = "/descendant-or-self::node()/child::para",
+      actual = p.unabbreviated
     )
     assertEquals(
-        expected = "//para",
-        actual = p.abbreviated
+      expected = "//para",
+      actual = p.abbreviated
     )
   }
 
@@ -57,12 +56,12 @@ class PathTest {
   fun relativePathDescendantOrSelfSyntax() {
     val p = relative { child("div"); descendantOrSelf(); child("para") }
     assertEquals(
-        expected = "child::div/descendant-or-self::node()/child::para",
-        actual = p.unabbreviated
+      expected = "child::div/descendant-or-self::node()/child::para",
+      actual = p.unabbreviated
     )
     assertEquals(
-        expected = "div//para",
-        actual = p.abbreviated
+      expected = "div//para",
+      actual = p.abbreviated
     )
   }
 
@@ -70,12 +69,12 @@ class PathTest {
   fun selfSyntax() {
     val p = relative { self(); descendantOrSelf(); child("para") }
     assertEquals(
-        expected = "self::node()/descendant-or-self::node()/child::para",
-        actual = p.unabbreviated
+      expected = "self::node()/descendant-or-self::node()/child::para",
+      actual = p.unabbreviated
     )
     assertEquals(
-        expected = ".//para",
-        actual = p.abbreviated
+      expected = ".//para",
+      actual = p.abbreviated
     )
   }
 
@@ -83,12 +82,12 @@ class PathTest {
   fun parentSyntax() {
     val p = relative { parent(); child("title") }
     assertEquals(
-        expected = "parent::node()/child::title",
-        actual = p.unabbreviated
+      expected = "parent::node()/child::title",
+      actual = p.unabbreviated
     )
     assertEquals(
-        expected = "../title",
-        actual = p.abbreviated
+      expected = "../title",
+      actual = p.abbreviated
     )
   }
 
@@ -101,12 +100,12 @@ class PathTest {
       }
     }
     assertEquals(
-        expected = "child::para[attribute::type = 'warning'][5]",
-        actual = p.unabbreviated
+      expected = "child::para[attribute::type = 'warning'][5]",
+      actual = p.unabbreviated
     )
     assertEquals(
-        expected = "para[@type = 'warning'][5]",
-        actual = p.abbreviated
+      expected = "para[@type = 'warning'][5]",
+      actual = p.abbreviated
     )
   }
 }

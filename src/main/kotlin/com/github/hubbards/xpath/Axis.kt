@@ -20,5 +20,5 @@ enum class Axis {
   NAMESPACE;
 
   override fun toString() =
-      name.toLowerCase().replace('_', '-')
+    name.toLowerCase().replace('_', '-')
 }

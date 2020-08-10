@@ -1,12 +1,11 @@
 package com.github.hubbards.xpath
 
 import com.github.hubbards.xpath.Expression.*
-import com.github.hubbards.xpath.Expression.FunctionCall.Companion.localName
 import com.github.hubbards.xpath.Expression.FunctionCall.Companion.count
+import com.github.hubbards.xpath.Expression.FunctionCall.Companion.localName
 import com.github.hubbards.xpath.Expression.Path.Companion.absolute
-
-import kotlin.test.assertEquals
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class ExpressionTest {
   @Test
@@ -27,12 +26,12 @@ class ExpressionTest {
   fun functionCallSyntax() {
     val e = localName(absolute { descendant("img"); parent() })
     assertEquals(
-        expected = "local-name(/descendant::img/parent::node())",
-        actual = e.unabbreviated
+      expected = "local-name(/descendant::img/parent::node())",
+      actual = e.unabbreviated
     )
     assertEquals(
-        expected = "local-name(/descendant::img/..)",
-        actual = e.abbreviated
+      expected = "local-name(/descendant::img/..)",
+      actual = e.abbreviated
     )
   }
 
@@ -48,12 +47,12 @@ class ExpressionTest {
       l greaterThan count(r)
     }
     assertEquals(
-        expected = "3 > count(/descendant-or-self::node()/child::ol/child::li)",
-        actual = e.unabbreviated
+      expected = "3 > count(/descendant-or-self::node()/child::ol/child::li)",
+      actual = e.unabbreviated
     )
     assertEquals(
-        expected = "3 > count(//ol/li)",
-        actual = e.abbreviated
+      expected = "3 > count(//ol/li)",
+      actual = e.abbreviated
     )
   }
 

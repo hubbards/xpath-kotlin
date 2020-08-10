@@ -5,14 +5,14 @@ package com.github.hubbards.xpath
  * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Location-Steps).
  */
 data class Step(
-    val axis: Axis = Axis.CHILD,
-    val node: String = NODE,
-    val predicates: List<Expression> = emptyList()
+  val axis: Axis = Axis.CHILD,
+  val node: String = NODE,
+  val predicates: List<Expression> = emptyList()
 ) : Syntax {
   constructor(
-      axis: Axis = Axis.CHILD,
-      node: String = NODE,
-      vararg predicates: Expression
+    axis: Axis = Axis.CHILD,
+    node: String = NODE,
+    vararg predicates: Expression
   ) : this(axis, node, predicates.toList())
 
   override val unabbreviated = buildString {
@@ -58,8 +58,8 @@ data class Step(
 
   // TODO document
   class Builder(
-      val axis: Axis = Axis.CHILD,
-      val node: String = NODE
+    val axis: Axis = Axis.CHILD,
+    val node: String = NODE
   ) {
     private val predicates: MutableList<Expression> = mutableListOf()
 
@@ -67,11 +67,11 @@ data class Step(
      * Add [expression] predicate to this builder
      */
     fun predicate(expression: Expression) =
-        predicates.add(expression)
+      predicates.add(expression)
 
     // TODO document
     fun build(): Step =
-        Step(axis = axis, node = node, predicates = predicates.toList())
+      Step(axis = axis, node = node, predicates = predicates.toList())
   }
 
   companion object {

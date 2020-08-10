@@ -10,7 +10,7 @@ import javax.xml.xpath.XPath
  * @see javax.xml.xpath.XPath.compile
  */
 fun XPath.compile(expression: Expression) =
-    this.compile(expression.unabbreviated)
+  this.compile(expression.unabbreviated)
 
 /**
  * Evaluate [expression] in context of [source].
@@ -18,17 +18,19 @@ fun XPath.compile(expression: Expression) =
  * @see javax.xml.xpath.XPath.evaluate
  */
 fun XPath.evaluate(expression: Expression, source: InputSource) =
-    this.evaluate(expression.unabbreviated, source)
+  this.evaluate(expression.unabbreviated, source)
 
 /**
  * Evaluate [expression] in context of [source] with [returnType].
  *
  * @see javax.xml.xpath.XPath.evaluate
  */
-fun XPath.evaluate(expression: Expression,
-                   source: InputSource,
-                   returnType: QName) =
-    this.evaluate(expression.unabbreviated, source, returnType)
+fun XPath.evaluate(
+  expression: Expression,
+  source: InputSource,
+  returnType: QName
+) =
+  this.evaluate(expression.unabbreviated, source, returnType)
 
 /**
  * Evaluate [expression] in context of [item].
@@ -36,7 +38,7 @@ fun XPath.evaluate(expression: Expression,
  * @see javax.xml.xpath.XPath.evaluate
  */
 fun XPath.evaluate(expression: Expression, item: Any) =
-    this.evaluate(expression.unabbreviated, item)
+  this.evaluate(expression.unabbreviated, item)
 
 /**
  * Evaluate [expression] in context of [item] with [returnType].
@@ -44,4 +46,4 @@ fun XPath.evaluate(expression: Expression, item: Any) =
  * @see javax.xml.xpath.XPath.evaluate
  */
 fun XPath.evaluate(expression: Expression, item: Any, returnType: QName) =
-    this.evaluate(expression.unabbreviated, item, returnType)
+  this.evaluate(expression.unabbreviated, item, returnType)

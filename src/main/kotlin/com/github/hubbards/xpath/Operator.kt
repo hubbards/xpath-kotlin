@@ -22,20 +22,20 @@ enum class Operator {
   UNION;
 
   override fun toString() =
-      when (this) {
-        OR -> "or"
-        AND -> "and"
-        EQUAL -> "="
-        NOT_EQUAL -> "!="
-        LESS_THAN_OR_EQUAL_TO -> "<="
-        LESS_THAN -> "<"
-        GREATER_THAN_OR_EQUAL_TO -> ">="
-        GREATER_THAN -> ">"
-        PLUS -> "+"
-        MINUS -> "-"
-        TIMES -> "*"
-        DIVIDE -> "div"
-        MODULO -> "mod"
-        UNION -> "|"
-      }
+    when (this) {
+      OR -> "or"
+      AND -> "and"
+      EQUAL -> "="
+      NOT_EQUAL -> "!="
+      LESS_THAN_OR_EQUAL_TO -> "<="
+      LESS_THAN -> "<"
+      GREATER_THAN_OR_EQUAL_TO -> ">="
+      GREATER_THAN -> ">"
+      PLUS -> "+"
+      MINUS -> "-"
+      TIMES -> "*"
+      DIVIDE -> "div"
+      MODULO -> "mod"
+      UNION -> "|"
+    }
 }
