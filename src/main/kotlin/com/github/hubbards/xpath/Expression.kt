@@ -64,12 +64,11 @@ sealed class Expression : Syntax {
    * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#strings).
    */
   data class LiteralString(val string: String) : Expression() {
-    override val unabbreviated =
-        buildString {
-          append('\'')
-          append(string)
-          append('\'')
-        }
+    override val unabbreviated = buildString {
+      append('\'')
+      append(string)
+      append('\'')
+    }
   }
 
   /**
@@ -77,23 +76,23 @@ sealed class Expression : Syntax {
    */
   data class UnaryMinusExpression(val expression: Expression) : Expression() {
     override val unabbreviated = buildString {
-          append(Operator.MINUS)
-          append(' ')
-          if (expression is BinaryExpression)
-            parenthesize(expression.unabbreviated)
-          else
-            append(expression.unabbreviated)
-        }
+      append(Operator.MINUS)
+      append(' ')
+      if (expression is BinaryExpression)
+        parenthesize(expression.unabbreviated)
+      else
+        append(expression.unabbreviated)
+    }
 
     // TODO eliminate duplicate code
     override val abbreviated = buildString {
-          append(Operator.MINUS)
-          append(' ')
-          if (expression is BinaryExpression)
-            parenthesize(expression.abbreviated)
-          else
-            append(expression.abbreviated)
-        }
+      append(Operator.MINUS)
+      append(' ')
+      if (expression is BinaryExpression)
+        parenthesize(expression.abbreviated)
+      else
+        append(expression.abbreviated)
+    }
   }
 
   /**
@@ -103,33 +102,33 @@ sealed class Expression : Syntax {
                               val left: Expression,
                               val right: Expression) : Expression() {
     override val unabbreviated: String = buildString {
-          if (left is BinaryExpression && left.operator < operator)
-            parenthesize(left.unabbreviated)
-          else
-            append(left.unabbreviated)
-          append(' ')
-          append(operator)
-          append(' ')
-          if (right is BinaryExpression && right.operator <= operator)
-            parenthesize(right.unabbreviated)
-          else
-            append(right.unabbreviated)
-        }
+      if (left is BinaryExpression && left.operator < operator)
+        parenthesize(left.unabbreviated)
+      else
+        append(left.unabbreviated)
+      append(' ')
+      append(operator)
+      append(' ')
+      if (right is BinaryExpression && right.operator <= operator)
+        parenthesize(right.unabbreviated)
+      else
+        append(right.unabbreviated)
+    }
 
     // TODO eliminate duplicate code
     override val abbreviated: String = buildString {
-          if (left is BinaryExpression && left.operator < operator)
-            parenthesize(left.abbreviated)
-          else
-            append(left.abbreviated)
-          append(' ')
-          append(operator)
-          append(' ')
-          if (right is BinaryExpression && right.operator <= operator)
-            parenthesize(right.abbreviated)
-          else
-            append(right.abbreviated)
-        }
+      if (left is BinaryExpression && left.operator < operator)
+        parenthesize(left.abbreviated)
+      else
+        append(left.abbreviated)
+      append(' ')
+      append(operator)
+      append(' ')
+      if (right is BinaryExpression && right.operator <= operator)
+        parenthesize(right.abbreviated)
+      else
+        append(right.abbreviated)
+    }
   }
 
   /**
@@ -198,9 +197,7 @@ sealed class Expression : Syntax {
       constructor(vararg steps: Step) : this(steps.toList())
 
       override val unabbreviated =
-          steps.joinToString(separator = "/",
-                             prefix = "/",
-                             transform = Step::unabbreviated)
+          steps.joinToString(separator = "/", prefix = "/", transform = Step::unabbreviated)
 
       // TODO eliminate duplicate code
       override val abbreviated = run {
@@ -225,8 +222,7 @@ sealed class Expression : Syntax {
       constructor(vararg steps: Step) : this(steps.toList())
 
       override val unabbreviated =
-          steps.joinToString(separator = "/",
-                             transform = Step::unabbreviated)
+          steps.joinToString(separator = "/", transform = Step::unabbreviated)
 
       // TODO eliminate duplicate code
       override val abbreviated = run {

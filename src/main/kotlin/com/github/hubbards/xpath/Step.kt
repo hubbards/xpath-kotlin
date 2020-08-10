@@ -15,51 +15,52 @@ data class Step(
       vararg predicates: Expression
   ) : this(axis, node, predicates.toList())
 
-  override val unabbreviated =
-      buildString {
+  override val unabbreviated = buildString {
+    append(axis)
+    append(':')
+    append(':')
+    append(node)
+    for (predicate in predicates) {
+      brackets(predicate.unabbreviated)
+    }
+  }
+
+  override val abbreviated = buildString {
+    when {
+      // abbreviated syntax for child::
+      axis == Axis.CHILD ->
+        append(node)
+      // abbreviated syntax for attribute::
+      axis == Axis.ATTRIBUTE -> {
+        append('@')
+        append(node)
+      }
+      // abbreviated syntax for self::node()
+      axis == Axis.SELF && node == NODE && predicates.isEmpty() ->
+        append('.')
+      // abbreviated syntax for parent::node()
+      axis == Axis.PARENT && node == NODE && predicates.isEmpty() -> {
+        append('.')
+        append('.')
+      }
+      // unabbreviated syntax
+      else -> {
         append(axis)
         append(':')
         append(':')
         append(node)
-        for (predicate in predicates) {
-          brackets(predicate.unabbreviated)
-        }
       }
-
-  override val abbreviated =
-      buildString {
-        when {
-          // abbreviated syntax for child::
-          axis == Axis.CHILD ->
-            append(node)
-          // abbreviated syntax for attribute::
-          axis == Axis.ATTRIBUTE -> {
-            append('@')
-            append(node)
-          }
-          // abbreviated syntax for self::node()
-          axis == Axis.SELF && node == NODE && predicates.isEmpty() ->
-            append('.')
-          // abbreviated syntax for parent::node()
-          axis == Axis.PARENT && node == NODE && predicates.isEmpty() -> {
-            append('.')
-            append('.')
-          }
-          // unabbreviated syntax
-          else -> {
-            append(axis)
-            append(':')
-            append(':')
-            append(node)
-          }
-        }
-        for (predicate in predicates) {
-          brackets(predicate.abbreviated)
-        }
-      }
+    }
+    for (predicate in predicates) {
+      brackets(predicate.abbreviated)
+    }
+  }
 
   // TODO document
-  class Builder(val axis: Axis = Axis.CHILD, val node: String = NODE) {
+  class Builder(
+      val axis: Axis = Axis.CHILD,
+      val node: String = NODE
+  ) {
     private val predicates: MutableList<Expression> = mutableListOf()
 
     /**
