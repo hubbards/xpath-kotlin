@@ -72,7 +72,9 @@ sealed class Expression : Syntax {
         }
   }
 
-  // TODO document
+  /**
+   * A unary minus XPath expression.
+   */
   data class UnaryMinusExpression(val expression: Expression) : Expression() {
     override val unabbreviated = buildString {
           append(Operator.MINUS)
@@ -94,7 +96,9 @@ sealed class Expression : Syntax {
         }
   }
 
-  // TODO document
+  /**
+   * A binary XPath expression.
+   */
   data class BinaryExpression(val operator: Operator,
                               val left: Expression,
                               val right: Expression) : Expression() {
@@ -187,7 +191,9 @@ sealed class Expression : Syntax {
   sealed class Path : Expression() {
     abstract val steps: List<Step>
 
-    // TODO document
+    /**
+     * An absolute location path.
+     */
     data class Absolute(override val steps: List<Step>) : Path() {
       constructor(vararg steps: Step) : this(steps.toList())
 
@@ -212,7 +218,9 @@ sealed class Expression : Syntax {
       }
     }
 
-    // TODO document
+    /**
+     * A relative location path.
+     */
     data class Relative(override val steps: List<Step>) : Path() {
       constructor(vararg steps: Step) : this(steps.toList())
 
