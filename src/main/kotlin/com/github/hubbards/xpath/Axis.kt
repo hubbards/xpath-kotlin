@@ -2,7 +2,6 @@ package com.github.hubbards.xpath
 
 // TODO document
 enum class Axis {
-  // TODO add missing axes
   SELF,
   CHILD,
   PARENT,
@@ -10,7 +9,12 @@ enum class Axis {
   ANCESTOR,
   DESCENDANT_OR_SELF,
   ANCESTOR_OR_SELF,
-  ATTRIBUTE;
+  FOLLOWING,
+  PRECEDING,
+  FOLLOWING_SIBLING,
+  PRECEDING_SIBLING,
+  ATTRIBUTE,
+  NAMESPACE;
 
   override fun toString() =
       name.toLowerCase().replace('_', '-')
