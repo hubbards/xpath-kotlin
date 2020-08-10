@@ -74,8 +74,13 @@ data class Step(
   }
 
   companion object {
-    // TODO replace with NodeTest type
+    // TODO replace with NodeTest type, see https://www.w3.org/TR/1999/REC-xpath-19991116/#node-tests
+    // TODO add name test form
+    // TODO add argument form on processing-instruction
     const val NODE: String = "node()"
+    const val TEXT: String = "text()"
+    const val COMMENT: String = "comment()"
+    const val PROCESSING_INSTRUCTION: String = "processing-instruction()"
 
     private fun StringBuilder.brackets(string: String) {
       append('[')
