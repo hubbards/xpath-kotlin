@@ -1,4 +1,4 @@
-# see https://editorconfig.org
+# https://editorconfig.org
 
 [*.{kt,kts}]
 indent_size=2

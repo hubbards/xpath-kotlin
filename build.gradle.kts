@@ -1,3 +1,5 @@
+// https://docs.gradle.org/current/userguide/userguide.html
+
 import com.jfrog.bintray.gradle.BintrayExtension
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.jvm.tasks.Jar
