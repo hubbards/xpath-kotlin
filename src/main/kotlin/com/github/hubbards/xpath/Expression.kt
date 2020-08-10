@@ -304,10 +304,40 @@ sealed class Expression : Syntax {
           doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, node), init)
 
       /**
+       * Add following axis step to this path
+       */
+      fun following(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+          doInit(Step.Builder(Axis.FOLLOWING, node), init)
+
+      /**
+       * Add preceding axis step to this path
+       */
+      fun preceding(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+          doInit(Step.Builder(Axis.PRECEDING, node), init)
+
+      /**
+       * Add following-sibling axis step to this path
+       */
+      fun followingSibling(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+          doInit(Step.Builder(Axis.FOLLOWING_SIBLING, node), init)
+
+      /**
+       * Add preceding-sibling axis step to this path
+       */
+      fun precedingSibling(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+          doInit(Step.Builder(Axis.PRECEDING_SIBLING, node), init)
+
+      /**
        * Add attribute axis step to this path
        */
       fun attribute(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
           doInit(Step.Builder(Axis.ATTRIBUTE, node), init)
+
+      /**
+       * Add namespace axis step to this path
+       */
+      fun namespace(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+          doInit(Step.Builder(Axis.NAMESPACE, node), init)
     }
 
     companion object {
