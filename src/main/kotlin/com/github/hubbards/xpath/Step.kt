@@ -1,8 +1,9 @@
 package com.github.hubbards.xpath
 
 /**
- * A location step, see
- * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Location-Steps).
+ * A [location step][specification].
+ *
+ * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Location-Steps
  */
 data class Step(
   val axis: Axis = Axis.CHILD,

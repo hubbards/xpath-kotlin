@@ -1,8 +1,9 @@
 package com.github.hubbards.xpath
 
 /**
- * An axis, see
- * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#axes).
+ * An [axis][specification].
+ *
+ * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#axes
  */
 enum class Axis {
   SELF,
