@@ -1,8 +1,9 @@
 package com.github.hubbards.xpath
 
 /**
- * An XPath expression, see
- * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Expressions).
+ * An XPath [expression][specification].
+ *
+ * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Expressions
  */
 sealed class Expression : Syntax {
   infix fun equal(other: Expression): Expression =
@@ -51,8 +52,9 @@ sealed class Expression : Syntax {
     BinaryExpression(Operator.UNION, this, other)
 
   /**
-   * A number literal, see
-   * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#numbers).
+   * A [number][specification] literal.
+   *
+   * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#numbers
    */
   data class LiteralNumber(val number: Number) : Expression() {
     override val unabbreviated =
@@ -60,8 +62,9 @@ sealed class Expression : Syntax {
   }
 
   /**
-   * A string literal, see
-   * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#strings).
+   * A [string][specification] literal.
+   *
+   * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#strings
    */
   data class LiteralString(val string: String) : Expression() {
     override val unabbreviated = buildString {
@@ -134,14 +137,18 @@ sealed class Expression : Syntax {
   }
 
   /**
-   * A function call expression, see
-   * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Function-Calls).
+   * A [function call][specification] XPath expression.
+   *
+   * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Function-Calls
    */
   data class FunctionCall(
     val name: String,
     val arguments: List<Expression> = emptyList()
   ) : Expression() {
-    constructor(name: String, vararg arguments: Expression) : this(name, arguments.toList())
+    constructor(
+      name: String,
+      vararg arguments: Expression?
+    ) : this(name, arguments.filterNotNull())
 
     override val unabbreviated =
       name + arguments.joinToString(
@@ -160,40 +167,149 @@ sealed class Expression : Syntax {
 
     // TODO add builder using invoke convention
 
+    /**
+     * Helpers for building function calls for the
+     * [core function library][specification].
+     *
+     * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#corelib
+     */
     companion object {
       /**
-       * Function call which returns the number of nodes in [argument] node-set.
+       * Call the [last][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-last
+       */
+      fun last(): FunctionCall =
+        FunctionCall("last")
+
+      /**
+       * Call the [position][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-position
+       */
+      fun position(): FunctionCall =
+        FunctionCall("position")
+
+      /**
+       * Call the [count][specification] function, which returns the number of nodes in
+       * [argument] node-set.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-count
        */
       fun count(argument: Expression): FunctionCall =
         FunctionCall("count", argument)
 
+      // TODO add id function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-id
+
       /**
-       * Function call which returns true if [argument] is false, and false otherwise.
+       * Call the [local-name][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-local-name
+       */
+      fun localName(argument: Expression?): FunctionCall =
+        FunctionCall("local-name", argument)
+
+      /**
+       * Call the [namespace-uri][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-namespace-uri
+       */
+      fun namespaceUri(argument: Expression?): FunctionCall =
+        FunctionCall("namespace-uri", argument)
+
+      /**
+       * Call the [name][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-name
+       */
+      fun name(argument: Expression?): FunctionCall =
+        FunctionCall("name", argument)
+
+      /**
+       * Call the [string][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-string
+       */
+      fun string(argument: Expression?): FunctionCall =
+        FunctionCall("string", argument)
+
+      // TODO add concat function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-concat
+
+      // TODO add starts-with function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-starts-with
+
+      // TODO add contains function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-contains
+
+      // TODO add substring-before function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-substring-before
+
+      // TODO add substring-after function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-substring-after
+
+      // TODO add substring function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-substring
+
+      // TODO add string-length function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-string-length
+
+      // TODO add normalize-space function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-normalize-space
+
+      // TODO add translate function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-translate
+
+      /**
+       * Call the [boolean][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-boolean
+       */
+      fun boolean(argument: Expression?): FunctionCall =
+        FunctionCall("boolean", argument)
+
+      /**
+       * Call the [not][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-not
        */
       fun not(argument: Expression): FunctionCall =
         FunctionCall("not", argument)
 
       /**
-       * Function call which returns the local part of the expanded-name of the
-       * first node in [argument] node-set.
+       * Call the [true][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-true
        */
-      fun localName(argument: Expression): FunctionCall =
-        FunctionCall("local-name", argument)
+      fun _true(): FunctionCall =
+        FunctionCall("true")
 
       /**
-       * Function call which returns the local part of the expanded-name of the
-       * context node.
+       * Call the [false][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-false
        */
-      val localName: FunctionCall =
-        FunctionCall("local-name")
+      fun _false(): FunctionCall =
+        FunctionCall("false")
 
-      // TODO add missing standard functions
+      // TODO add lang function, see
+      //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-lang
+
+      /**
+       * Call the [number][specification] function.
+       *
+       * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-number
+       */
+      fun number(argument: Expression?): FunctionCall =
+        FunctionCall("number", argument)
     }
   }
 
   /**
-   * A location path, see
-   * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#location-paths).
+   * A [location path][specification] XPath expression.
+   *
+   * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#location-paths
    */
   sealed class Path : Expression() {
     abstract val steps: List<Step>
