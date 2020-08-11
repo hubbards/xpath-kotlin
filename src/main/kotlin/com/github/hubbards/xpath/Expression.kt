@@ -325,23 +325,17 @@ sealed class Expression : Syntax {
       override val unabbreviated =
         steps.joinToString(separator = "/", prefix = "/", transform = Step::unabbreviated)
 
-      // TODO eliminate duplicate code
-      override val abbreviated = run {
-        val last =
-          if (steps.isNotEmpty())
-          (if (steps.size > 1) "/" else "") + steps.last().abbreviated
-          else
-            ""
-        steps.dropLast(1).joinToString(
-          separator = "/",
-          prefix = "/",
-          postfix = last
-        ) {
-          if (it.axis == Axis.DESCENDANT_OR_SELF && it.node == Step.NODE && it.predicates.isEmpty())
-            ""
-          else
-            it.abbreviated
+      override val abbreviated = buildString {
+        append('/')
+        // interior steps
+        for (step in steps.dropLast(1)) {
+          if (step.canNotSkip)
+            append(step.abbreviated)
+          append('/')
         }
+        // last step
+        if (steps.isNotEmpty())
+          append(steps.last().abbreviated)
       }
     }
 
@@ -351,31 +345,29 @@ sealed class Expression : Syntax {
     data class Relative(override val steps: List<Step>) : Path() {
       constructor(vararg steps: Step) : this(steps.toList())
 
+      init {
+        require(steps.isNotEmpty()) {
+          "relative path must contain at least one step"
+        }
+      }
+
       override val unabbreviated =
         steps.joinToString(separator = "/", transform = Step::unabbreviated)
 
-      // TODO eliminate duplicate code
-      override val abbreviated = run {
-        val first =
-          if (steps.isNotEmpty())
-            steps.first().abbreviated + (if (steps.size > 1) "/" else "")
-          else
-            ""
-        val last =
-          if (steps.size > 1)
-          (if (steps.size > 2) "/" else "") + steps.last().abbreviated
-          else
-            ""
-        steps.drop(1).dropLast(1).joinToString(
-          separator = "/",
-          prefix = first,
-          postfix = last
-        ) {
-          if (it.axis == Axis.DESCENDANT_OR_SELF && it.node == Step.NODE && it.predicates.isEmpty())
-            ""
-          else
-            it.abbreviated
+      override val abbreviated = buildString {
+        // first step
+        append(steps.first().abbreviated)
+        if (steps.size > 1)
+          append('/')
+        // interior steps
+        for (step in steps.drop(1).dropLast(1)) {
+          if (step.canNotSkip)
+            append(step.abbreviated)
+          append('/')
         }
+        // last step
+        if (steps.size > 1)
+          append(steps.last().abbreviated)
       }
     }
 
@@ -481,6 +473,12 @@ sealed class Expression : Syntax {
     }
 
     companion object {
+      private val Step.canSkip: Boolean
+        get() = axis == Axis.DESCENDANT_OR_SELF && node == Step.NODE && predicates.isEmpty()
+
+      private val Step.canNotSkip: Boolean
+        get() = !canSkip
+
       /**
        * An absolute location path.
        */
