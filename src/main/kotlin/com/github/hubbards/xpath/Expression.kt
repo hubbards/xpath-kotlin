@@ -305,7 +305,6 @@ sealed class Expression : Syntax {
         FunctionCall("number", argument)
 
       // TODO add other number functions
-
     }
   }
 
@@ -333,7 +332,11 @@ sealed class Expression : Syntax {
           (if (steps.size > 1) "/" else "") + steps.last().abbreviated
           else
             ""
-        steps.dropLast(1).joinToString(separator = "/", prefix = "/", postfix = last) {
+        steps.dropLast(1).joinToString(
+          separator = "/",
+          prefix = "/",
+          postfix = last
+        ) {
           if (it.axis == Axis.DESCENDANT_OR_SELF && it.node == Step.NODE && it.predicates.isEmpty())
             ""
           else
@@ -363,7 +366,11 @@ sealed class Expression : Syntax {
           (if (steps.size > 2) "/" else "") + steps.last().abbreviated
           else
             ""
-        steps.drop(1).dropLast(1).joinToString(separator = "/", prefix = first, postfix = last) {
+        steps.drop(1).dropLast(1).joinToString(
+          separator = "/",
+          prefix = first,
+          postfix = last
+        ) {
           if (it.axis == Axis.DESCENDANT_OR_SELF && it.node == Step.NODE && it.predicates.isEmpty())
             ""
           else
