@@ -7,15 +7,9 @@ package com.github.hubbards.xpath
  */
 data class Step(
   val axis: Axis = Axis.CHILD,
-  val node: String = NODE,
+  val node: NodeTest = NodeTest.Node,
   val predicates: List<Expression> = emptyList()
 ) : Syntax {
-  constructor(
-    axis: Axis = Axis.CHILD,
-    node: String = NODE,
-    vararg predicates: Expression
-  ) : this(axis, node, predicates.toList())
-
   override val unabbreviated = buildString {
     append(axis)
     append(':')
@@ -37,10 +31,10 @@ data class Step(
         append(node)
       }
       // abbreviated syntax for self::node()
-      axis == Axis.SELF && node == NODE && predicates.isEmpty() ->
+      axis == Axis.SELF && node == NodeTest.Node && predicates.isEmpty() ->
         append('.')
       // abbreviated syntax for parent::node()
-      axis == Axis.PARENT && node == NODE && predicates.isEmpty() -> {
+      axis == Axis.PARENT && node == NodeTest.Node && predicates.isEmpty() -> {
         append('.')
         append('.')
       }
@@ -60,10 +54,7 @@ data class Step(
   /**
    * A location step builder.
    */
-  class Builder(
-    val axis: Axis = Axis.CHILD,
-    val node: String = NODE
-  ) {
+  class Builder(val axis: Axis, val node: NodeTest) {
     private val predicates: MutableList<Expression> = mutableListOf()
 
     /**
@@ -79,16 +70,18 @@ data class Step(
       Step(axis = axis, node = node, predicates = predicates.toList())
   }
 
-  companion object {
-    const val NODE: String = "node()"
-    const val TEXT: String = "text()"
-    const val COMMENT: String = "comment()"
-    const val PROCESSING_INSTRUCTION: String = "processing-instruction()"
-
+  companion object Factory {
     private fun StringBuilder.brackets(string: String) {
       append('[')
       append(string)
       append(']')
     }
+
+    /**
+     * A location step. This is useful for constructing a location step from
+     * Java.
+     */
+    fun step(axis: Axis, node: NodeTest, vararg predicates: Expression): Step =
+      Step(axis, node, predicates.toList())
   }
 }

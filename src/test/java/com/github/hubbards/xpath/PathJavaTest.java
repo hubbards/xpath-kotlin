@@ -6,12 +6,12 @@ import org.junit.Test;
 public class PathJavaTest {
     @Test
     public void predicateSyntax() {
-        Expression expression = new Expression.Path.Relative(new Step(
+        Expression expression = Expression.Path.Factory.relative(Step.Factory.step(
                 Axis.CHILD,
-                "para",
+                new NodeTest.Name("para"),
                 new Expression.BinaryExpression(
                         Operator.EQUAL,
-                        new Expression.Path.Relative(new Step(Axis.ATTRIBUTE, "type")),
+                        Expression.Path.Factory.relative(Step.Factory.step(Axis.ATTRIBUTE, new NodeTest.Name("type"))),
                         new Expression.LiteralString("warning")
                 ),
                 new Expression.LiteralNumber(5)

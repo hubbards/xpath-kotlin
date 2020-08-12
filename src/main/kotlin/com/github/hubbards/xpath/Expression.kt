@@ -87,7 +87,6 @@ sealed class Expression : Syntax {
         append(expression.unabbreviated)
     }
 
-    // TODO eliminate duplicate code
     override val abbreviated = buildString {
       append(Operator.MINUS)
       append(' ')
@@ -120,7 +119,6 @@ sealed class Expression : Syntax {
         append(right.unabbreviated)
     }
 
-    // TODO eliminate duplicate code
     override val abbreviated: String = buildString {
       if (left is BinaryExpression && left.operator < operator)
         parenthesize(left.abbreviated)
@@ -134,6 +132,10 @@ sealed class Expression : Syntax {
       else
         append(right.abbreviated)
     }
+
+    companion object {
+      // TODO pick up here
+    }
   }
 
   /**
@@ -145,11 +147,6 @@ sealed class Expression : Syntax {
     val name: String,
     val arguments: List<Expression> = emptyList()
   ) : Expression() {
-    constructor(
-      name: String,
-      vararg arguments: Expression?
-    ) : this(name, arguments.filterNotNull())
-
     override val unabbreviated =
       name + arguments.joinToString(
         prefix = "(",
@@ -157,7 +154,6 @@ sealed class Expression : Syntax {
         transform = Expression::unabbreviated
       )
 
-    // TODO eliminate duplicate code
     override val abbreviated =
       name + arguments.joinToString(
         prefix = "(",
@@ -168,12 +164,12 @@ sealed class Expression : Syntax {
     // TODO add builder using invoke convention
 
     /**
-     * Helpers for building function calls from the
-     * [core function library][specification].
+     * Factory methods for constructing [core function library][specification]
+     * function calls.
      *
      * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#corelib
      */
-    companion object {
+    companion object Factory {
       /**
        * Call the [last][specification] function.
        *
@@ -191,13 +187,12 @@ sealed class Expression : Syntax {
         FunctionCall("position")
 
       /**
-       * Call the [count][specification] function, which returns the number of nodes in
-       * [argument] node-set.
+       * Call the [count][specification] function.
        *
        * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-count
        */
       fun count(argument: Expression): FunctionCall =
-        FunctionCall("count", argument)
+        FunctionCall("count", listOf(argument))
 
       // TODO add id function, see
       //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-id
@@ -208,7 +203,7 @@ sealed class Expression : Syntax {
        * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-local-name
        */
       fun localName(argument: Expression?): FunctionCall =
-        FunctionCall("local-name", argument)
+        FunctionCall("local-name", listOfNotNull(argument))
 
       /**
        * Call the [namespace-uri][specification] function.
@@ -216,7 +211,7 @@ sealed class Expression : Syntax {
        * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-namespace-uri
        */
       fun namespaceUri(argument: Expression?): FunctionCall =
-        FunctionCall("namespace-uri", argument)
+        FunctionCall("namespace-uri", listOfNotNull(argument))
 
       /**
        * Call the [name][specification] function.
@@ -224,7 +219,7 @@ sealed class Expression : Syntax {
        * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-name
        */
       fun name(argument: Expression?): FunctionCall =
-        FunctionCall("name", argument)
+        FunctionCall("name", listOfNotNull(argument))
 
       /**
        * Call the [string][specification] function.
@@ -232,7 +227,7 @@ sealed class Expression : Syntax {
        * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-string
        */
       fun string(argument: Expression?): FunctionCall =
-        FunctionCall("string", argument)
+        FunctionCall("string", listOfNotNull(argument))
 
       // TODO add concat function, see
       //  https://www.w3.org/TR/1999/REC-xpath-19991116/#function-concat
@@ -267,7 +262,7 @@ sealed class Expression : Syntax {
        * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-boolean
        */
       fun boolean(argument: Expression?): FunctionCall =
-        FunctionCall("boolean", argument)
+        FunctionCall("boolean", listOfNotNull(argument))
 
       /**
        * Call the [not][specification] function.
@@ -275,7 +270,7 @@ sealed class Expression : Syntax {
        * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-not
        */
       fun not(argument: Expression): FunctionCall =
-        FunctionCall("not", argument)
+        FunctionCall("not", listOf(argument))
 
       /**
        * Call the [true][specification] function.
@@ -302,7 +297,7 @@ sealed class Expression : Syntax {
        * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#function-number
        */
       fun number(argument: Expression?): FunctionCall =
-        FunctionCall("number", argument)
+        FunctionCall("number", listOfNotNull(argument))
 
       // TODO add other number functions
     }
@@ -320,22 +315,24 @@ sealed class Expression : Syntax {
      * An absolute location path.
      */
     data class Absolute(override val steps: List<Step>) : Path() {
-      constructor(vararg steps: Step) : this(steps.toList())
-
       override val unabbreviated =
-        steps.joinToString(separator = "/", prefix = "/", transform = Step::unabbreviated)
+        steps.joinToString(
+          separator = "/",
+          prefix = "/",
+          transform = Step::unabbreviated
+        )
 
       override val abbreviated = buildString {
         append('/')
         // interior steps
         for (step in steps.dropLast(1)) {
-          if (step.canNotSkip)
-            append(step.abbreviated)
+          interior(step)
           append('/')
         }
         // last step
-        if (steps.isNotEmpty())
+        if (steps.isNotEmpty()) {
           append(steps.last().abbreviated)
+        }
       }
     }
 
@@ -343,8 +340,6 @@ sealed class Expression : Syntax {
      * A relative location path.
      */
     data class Relative(override val steps: List<Step>) : Path() {
-      constructor(vararg steps: Step) : this(steps.toList())
-
       init {
         require(steps.isNotEmpty()) {
           "relative path must contain at least one step"
@@ -352,22 +347,24 @@ sealed class Expression : Syntax {
       }
 
       override val unabbreviated =
-        steps.joinToString(separator = "/", transform = Step::unabbreviated)
+        steps.joinToString(
+          separator = "/",
+          transform = Step::unabbreviated
+        )
 
       override val abbreviated = buildString {
         // first step
         append(steps.first().abbreviated)
-        if (steps.size > 1)
-          append('/')
         // interior steps
         for (step in steps.drop(1).dropLast(1)) {
-          if (step.canNotSkip)
-            append(step.abbreviated)
           append('/')
+          interior(step)
         }
         // last step
-        if (steps.size > 1)
+        if (steps.size > 1) {
+          append('/')
           append(steps.last().abbreviated)
+        }
       }
     }
 
@@ -396,94 +393,268 @@ sealed class Expression : Syntax {
       /**
        * Add self axis step to this path
        */
-      fun self(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun self(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.SELF, node), init)
+
+      /**
+       * Add self axis step to this path
+       */
+      fun self(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.SELF, NodeTest.Name(name)), init)
 
       /**
        * Add child axis step to this path
        */
-      fun child(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun child(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.CHILD, node), init)
+
+      /**
+       * Add child axis step to this path
+       */
+      fun child(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.CHILD, NodeTest.Name(name)), init)
 
       /**
        * Add parent axis step to this path
        */
-      fun parent(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun parent(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.PARENT, node), init)
+
+      /**
+       * Add parent axis step to this path
+       */
+      fun parent(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.PARENT, NodeTest.Name(name)), init)
 
       /**
        * Add descendant axis step to this path
        */
-      fun descendant(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun descendant(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.DESCENDANT, node), init)
+
+      /**
+       * Add descendant axis step to this path
+       */
+      fun descendant(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.DESCENDANT, NodeTest.Name(name)), init)
 
       /**
        * Add ancestor axis step to this path
        */
-      fun ancestor(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun ancestor(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.ANCESTOR, node), init)
+
+      /**
+       * Add ancestor axis step to this path
+       */
+      fun ancestor(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.ANCESTOR, NodeTest.Name(name)), init)
 
       /**
        * Add descendant-or-self axis step to this path
        */
-      fun descendantOrSelf(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun descendantOrSelf(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.DESCENDANT_OR_SELF, node), init)
+
+      /**
+       * Add descendant-or-self axis step to this path
+       */
+      fun descendantOrSelf(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.DESCENDANT_OR_SELF, NodeTest.Name(name)), init)
 
       /**
        * Add ancestor-or-self axis step to this path
        */
-      fun ancestorOrSelf(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun ancestorOrSelf(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, node), init)
+
+      /**
+       * Add ancestor-or-self axis step to this path
+       */
+      fun ancestorOrSelf(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, NodeTest.Name(name)), init)
 
       /**
        * Add following axis step to this path
        */
-      fun following(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun following(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.FOLLOWING, node), init)
+
+      /**
+       * Add following axis step to this path
+       */
+      fun following(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.FOLLOWING, NodeTest.Name(name)), init)
 
       /**
        * Add preceding axis step to this path
        */
-      fun preceding(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun preceding(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.PRECEDING, node), init)
+
+      /**
+       * Add preceding axis step to this path
+       */
+      fun preceding(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.PRECEDING, NodeTest.Name(name)), init)
 
       /**
        * Add following-sibling axis step to this path
        */
-      fun followingSibling(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun followingSibling(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.FOLLOWING_SIBLING, node), init)
+
+      /**
+       * Add following-sibling axis step to this path
+       */
+      fun followingSibling(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.FOLLOWING_SIBLING, NodeTest.Name(name)), init)
 
       /**
        * Add preceding-sibling axis step to this path
        */
-      fun precedingSibling(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun precedingSibling(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.PRECEDING_SIBLING, node), init)
+
+      /**
+       * Add preceding-sibling axis step to this path
+       */
+      fun precedingSibling(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.PRECEDING_SIBLING, NodeTest.Name(name)), init)
 
       /**
        * Add attribute axis step to this path
        */
-      fun attribute(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun attribute(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.ATTRIBUTE, node), init)
+
+      /**
+       * Add attribute axis step to this path
+       */
+      fun attribute(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.ATTRIBUTE, NodeTest.Name(name)), init)
 
       /**
        * Add namespace axis step to this path
        */
-      fun namespace(node: String = Step.NODE, init: Step.Builder.() -> Unit = {}) =
+      fun namespace(
+        node: NodeTest = NodeTest.Node,
+        init: Step.Builder.() -> Unit = {}
+      ) =
         doInit(Step.Builder(Axis.NAMESPACE, node), init)
+
+      /**
+       * Add namespace axis step to this path
+       */
+      fun namespace(
+        name: String,
+        init: Step.Builder.() -> Unit = {}
+      ) =
+        doInit(Step.Builder(Axis.NAMESPACE, NodeTest.Name(name)), init)
     }
 
-    companion object {
-      private val Step.canSkip: Boolean
-        get() = axis == Axis.DESCENDANT_OR_SELF && node == Step.NODE && predicates.isEmpty()
+    companion object Factory {
+      private fun StringBuilder.interior(step: Step) =
+        if (
+          step.axis == Axis.DESCENDANT_OR_SELF &&
+          step.node == NodeTest.Node &&
+          step.predicates.isEmpty()
+        )
+          this
+        else
+          append(step.abbreviated)
 
-      private val Step.canNotSkip: Boolean
-        get() = !canSkip
+      /**
+       * An absolute location path. This is useful for constructing an absolute
+       * location path from Java.
+       */
+      fun absolute(vararg steps: Step): Absolute =
+        Absolute(steps.asList())
 
       /**
        * An absolute location path.
        */
       fun absolute(init: Builder.() -> Unit): Absolute =
         Builder().apply(init).absolute()
+
+      /**
+       * A relative location path. This is useful for constructing a relative
+       * location path from Java.
+       */
+      fun relative(vararg steps: Step): Relative =
+        Relative(steps.asList())
 
       /**
        * A relative location path.

@@ -20,10 +20,10 @@ public class ExpressionJavaTest {
 
     @Test
     public void functionCallSyntax() {
-        Expression expression = Expression.FunctionCall.Companion.localName(
-                new Expression.Path.Absolute(
-                        new Step(Axis.DESCENDANT, "img"),
-                        new Step(Axis.PARENT, Step.NODE)
+        Expression expression = Expression.FunctionCall.Factory.localName(
+                Expression.Path.Factory.absolute(
+                        Step.Factory.step(Axis.DESCENDANT, new NodeTest.Name("img")),
+                        Step.Factory.step(Axis.PARENT, NodeTest.Node.INSTANCE)
                 )
         );
         Assert.assertEquals("local-name(/descendant::img/parent::node())", expression.getUnabbreviated());
@@ -35,10 +35,10 @@ public class ExpressionJavaTest {
         Expression expression = new Expression.BinaryExpression(
                 Operator.GREATER_THAN,
                 new Expression.LiteralNumber(3),
-                Expression.FunctionCall.Companion.count(new Expression.Path.Absolute(
-                        new Step(Axis.DESCENDANT_OR_SELF, Step.NODE),
-                        new Step(Axis.CHILD, "ol"),
-                        new Step(Axis.CHILD, "li")
+                Expression.FunctionCall.Factory.count(Expression.Path.Factory.absolute(
+                        Step.Factory.step(Axis.DESCENDANT_OR_SELF, NodeTest.Node.INSTANCE),
+                        Step.Factory.step(Axis.CHILD, new NodeTest.Name("ol")),
+                        Step.Factory.step(Axis.CHILD, new NodeTest.Name("li"))
                 ))
         );
         Assert.assertEquals(
