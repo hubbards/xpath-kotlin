@@ -5,7 +5,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.jvm.tasks.Jar
 
 group = "com.github.hubbards"
-version = "0.0.3"
+version = "0.0.4"
 
 plugins {
   `maven-publish`
