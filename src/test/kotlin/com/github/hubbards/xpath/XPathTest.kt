@@ -1,8 +1,7 @@
 package com.github.hubbards.xpath
 
-import com.github.hubbards.xpath.Expression.*
-import com.github.hubbards.xpath.Expression.Path.Factory.absolute
-import com.github.hubbards.xpath.Expression.Path.Factory.relative
+import com.github.hubbards.xpath.Path.Factory.absolute
+import com.github.hubbards.xpath.Path.Factory.relative
 import org.junit.Before
 import org.junit.Test
 import org.w3c.dom.Node

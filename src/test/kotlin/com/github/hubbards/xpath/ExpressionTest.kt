@@ -1,9 +1,8 @@
 package com.github.hubbards.xpath
 
-import com.github.hubbards.xpath.Expression.*
-import com.github.hubbards.xpath.Expression.FunctionCall.Factory.count
-import com.github.hubbards.xpath.Expression.FunctionCall.Factory.localName
-import com.github.hubbards.xpath.Expression.Path.Factory.absolute
+import com.github.hubbards.xpath.FunctionCall.Factory.count
+import com.github.hubbards.xpath.FunctionCall.Factory.localName
+import com.github.hubbards.xpath.Path.Factory.absolute
 import org.junit.Test
 import kotlin.test.assertEquals
 

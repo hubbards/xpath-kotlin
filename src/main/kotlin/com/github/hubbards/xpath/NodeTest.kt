@@ -27,7 +27,7 @@ sealed class NodeTest {
   }
 
   // TODO document
-  data class ProcessingInstruction(val argument: Expression.LiteralString?) : NodeTest() {
+  data class ProcessingInstruction(val argument: LiteralString?) : NodeTest() {
     override fun toString() = buildString {
       append("processing-instruction")
       append('(')

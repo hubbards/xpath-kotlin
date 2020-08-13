@@ -70,18 +70,15 @@ data class Step(
       Step(axis = axis, node = node, predicates = predicates.toList())
   }
 
+  /**
+   * Factory methods for constructing location steps.
+   */
   companion object Factory {
-    private fun StringBuilder.brackets(string: String) {
-      append('[')
-      append(string)
-      append(']')
-    }
-
     /**
-     * A location step. This is useful for constructing a location step from
-     * Java.
+     * Construct a location step. This is useful for constructing a location
+     * step from Java.
      */
     fun step(axis: Axis, node: NodeTest, vararg predicates: Expression): Step =
-      Step(axis, node, predicates.toList())
+      Step(axis, node, predicates.asList())
   }
 }
