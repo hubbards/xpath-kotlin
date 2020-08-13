@@ -14,5 +14,6 @@ interface Syntax {
    */
   @JvmDefault
   val abbreviated: String
-    get() = unabbreviated
+    get() =
+      unabbreviated
 }

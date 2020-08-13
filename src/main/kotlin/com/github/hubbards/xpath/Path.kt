@@ -19,27 +19,28 @@ sealed class Path : Expression() {
         transform = Step::unabbreviated
       )
 
-    override val abbreviated = buildString {
-      append('/')
-      // interior steps
-      for (step in steps.dropLast(1)) {
-        interior(step)
+    override val abbreviated =
+      buildString {
         append('/')
+        // interior steps
+        for (step in steps.dropLast(1)) {
+          interior(step)
+          append('/')
+        }
+        // last step
+        if (steps.isNotEmpty()) {
+          append(steps.last().abbreviated)
+        }
       }
-      // last step
-      if (steps.isNotEmpty()) {
-        append(steps.last().abbreviated)
-      }
-    }
   }
 
   /**
-   * A relative location path.
+   * A relative location path, which must consist of at least one location step.
    */
   data class Relative(override val steps: List<Step>) : Path() {
     init {
       require(steps.isNotEmpty()) {
-        "relative path must contain at least one step"
+        "relative path must consist of at least one step"
       }
     }
 
@@ -49,27 +50,29 @@ sealed class Path : Expression() {
         transform = Step::unabbreviated
       )
 
-    override val abbreviated = buildString {
-      // first step
-      append(steps.first().abbreviated)
-      // interior steps
-      for (step in steps.drop(1).dropLast(1)) {
-        append('/')
-        interior(step)
+    override val abbreviated =
+      buildString {
+        // first step
+        append(steps.first().abbreviated)
+        // interior steps
+        for (step in steps.drop(1).dropLast(1)) {
+          append('/')
+          interior(step)
+        }
+        // last step
+        if (steps.size > 1) {
+          append('/')
+          append(steps.last().abbreviated)
+        }
       }
-      // last step
-      if (steps.size > 1) {
-        append('/')
-        append(steps.last().abbreviated)
-      }
-    }
   }
 
   /**
    * A location path builder.
    */
   class Builder {
-    private val steps: MutableList<Step> = mutableListOf()
+    private val steps =
+      mutableListOf<Step>()
 
     private fun doInit(builder: Step.Builder, init: Step.Builder.() -> Unit) {
       steps += builder.apply(init).build()
@@ -93,7 +96,7 @@ sealed class Path : Expression() {
     fun self(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.SELF, node), init)
 
     /**
@@ -102,7 +105,7 @@ sealed class Path : Expression() {
     fun self(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.SELF, NodeTest.Name(name)), init)
 
     /**
@@ -111,7 +114,7 @@ sealed class Path : Expression() {
     fun child(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.CHILD, node), init)
 
     /**
@@ -120,7 +123,7 @@ sealed class Path : Expression() {
     fun child(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.CHILD, NodeTest.Name(name)), init)
 
     /**
@@ -129,7 +132,7 @@ sealed class Path : Expression() {
     fun parent(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.PARENT, node), init)
 
     /**
@@ -138,7 +141,7 @@ sealed class Path : Expression() {
     fun parent(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.PARENT, NodeTest.Name(name)), init)
 
     /**
@@ -147,7 +150,7 @@ sealed class Path : Expression() {
     fun descendant(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.DESCENDANT, node), init)
 
     /**
@@ -156,7 +159,7 @@ sealed class Path : Expression() {
     fun descendant(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.DESCENDANT, NodeTest.Name(name)), init)
 
     /**
@@ -165,7 +168,7 @@ sealed class Path : Expression() {
     fun ancestor(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.ANCESTOR, node), init)
 
     /**
@@ -174,7 +177,7 @@ sealed class Path : Expression() {
     fun ancestor(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.ANCESTOR, NodeTest.Name(name)), init)
 
     /**
@@ -183,7 +186,7 @@ sealed class Path : Expression() {
     fun descendantOrSelf(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.DESCENDANT_OR_SELF, node), init)
 
     /**
@@ -192,7 +195,7 @@ sealed class Path : Expression() {
     fun descendantOrSelf(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.DESCENDANT_OR_SELF, NodeTest.Name(name)), init)
 
     /**
@@ -201,7 +204,7 @@ sealed class Path : Expression() {
     fun ancestorOrSelf(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, node), init)
 
     /**
@@ -210,7 +213,7 @@ sealed class Path : Expression() {
     fun ancestorOrSelf(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, NodeTest.Name(name)), init)
 
     /**
@@ -219,7 +222,7 @@ sealed class Path : Expression() {
     fun following(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.FOLLOWING, node), init)
 
     /**
@@ -228,7 +231,7 @@ sealed class Path : Expression() {
     fun following(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.FOLLOWING, NodeTest.Name(name)), init)
 
     /**
@@ -237,7 +240,7 @@ sealed class Path : Expression() {
     fun preceding(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.PRECEDING, node), init)
 
     /**
@@ -246,7 +249,7 @@ sealed class Path : Expression() {
     fun preceding(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.PRECEDING, NodeTest.Name(name)), init)
 
     /**
@@ -255,7 +258,7 @@ sealed class Path : Expression() {
     fun followingSibling(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.FOLLOWING_SIBLING, node), init)
 
     /**
@@ -264,7 +267,7 @@ sealed class Path : Expression() {
     fun followingSibling(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.FOLLOWING_SIBLING, NodeTest.Name(name)), init)
 
     /**
@@ -273,7 +276,7 @@ sealed class Path : Expression() {
     fun precedingSibling(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.PRECEDING_SIBLING, node), init)
 
     /**
@@ -282,7 +285,7 @@ sealed class Path : Expression() {
     fun precedingSibling(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.PRECEDING_SIBLING, NodeTest.Name(name)), init)
 
     /**
@@ -291,7 +294,7 @@ sealed class Path : Expression() {
     fun attribute(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.ATTRIBUTE, node), init)
 
     /**
@@ -300,7 +303,7 @@ sealed class Path : Expression() {
     fun attribute(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.ATTRIBUTE, NodeTest.Name(name)), init)
 
     /**
@@ -309,7 +312,7 @@ sealed class Path : Expression() {
     fun namespace(
       node: NodeTest = NodeTest.Node,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.NAMESPACE, node), init)
 
     /**
@@ -318,7 +321,7 @@ sealed class Path : Expression() {
     fun namespace(
       name: String,
       init: Step.Builder.() -> Unit = {}
-    ) =
+    ): Unit =
       doInit(Step.Builder(Axis.NAMESPACE, NodeTest.Name(name)), init)
   }
 

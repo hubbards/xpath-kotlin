@@ -10,64 +10,68 @@ data class Step(
   val node: NodeTest = NodeTest.Node,
   val predicates: List<Expression> = emptyList()
 ) : Syntax {
-  override val unabbreviated = buildString {
-    append(axis)
-    append(':')
-    append(':')
-    append(node)
-    for (predicate in predicates) {
-      brackets(predicate.unabbreviated)
+  override val unabbreviated =
+    buildString {
+      append(axis)
+      append(':')
+      append(':')
+      append(node)
+      for (predicate in predicates) {
+        brackets(predicate.unabbreviated)
+      }
     }
-  }
 
-  override val abbreviated = buildString {
-    when {
-      // abbreviated syntax for child::
-      axis == Axis.CHILD ->
-        append(node)
-      // abbreviated syntax for attribute::
-      axis == Axis.ATTRIBUTE -> {
-        append('@')
-        append(node)
+  override val abbreviated =
+    buildString {
+      when {
+        // abbreviated syntax for child::
+        axis == Axis.CHILD ->
+          append(node)
+        // abbreviated syntax for attribute::
+        axis == Axis.ATTRIBUTE -> {
+          append('@')
+          append(node)
+        }
+        // abbreviated syntax for self::node()
+        axis == Axis.SELF && node == NodeTest.Node && predicates.isEmpty() ->
+          append('.')
+        // abbreviated syntax for parent::node()
+        axis == Axis.PARENT && node == NodeTest.Node && predicates.isEmpty() -> {
+          append('.')
+          append('.')
+        }
+        // unabbreviated syntax
+        else -> {
+          append(axis)
+          append(':')
+          append(':')
+          append(node)
+        }
       }
-      // abbreviated syntax for self::node()
-      axis == Axis.SELF && node == NodeTest.Node && predicates.isEmpty() ->
-        append('.')
-      // abbreviated syntax for parent::node()
-      axis == Axis.PARENT && node == NodeTest.Node && predicates.isEmpty() -> {
-        append('.')
-        append('.')
-      }
-      // unabbreviated syntax
-      else -> {
-        append(axis)
-        append(':')
-        append(':')
-        append(node)
+      for (predicate in predicates) {
+        brackets(predicate.abbreviated)
       }
     }
-    for (predicate in predicates) {
-      brackets(predicate.abbreviated)
-    }
-  }
 
   /**
    * A location step builder.
    */
   class Builder(val axis: Axis, val node: NodeTest) {
-    private val predicates: MutableList<Expression> = mutableListOf()
+    private val predicates =
+      mutableListOf<Expression>()
 
     /**
-     * Add [expression] predicate to this builder
+     * Add [expression] predicate to this builder.
      */
-    fun predicate(expression: Expression) =
-      predicates.add(expression)
+    fun predicate(expression: Expression) {
+      predicates += expression
+    }
 
     /**
-     * Build a location step
+     * Build a location step.
      */
     fun build(): Step =
-      Step(axis = axis, node = node, predicates = predicates.toList())
+      Step(axis, node, predicates.toList())
   }
 
   /**

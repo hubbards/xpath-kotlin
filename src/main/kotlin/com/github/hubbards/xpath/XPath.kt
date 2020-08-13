@@ -29,21 +29,28 @@ fun XPath.evaluate(
   expression: Expression,
   source: InputSource,
   returnType: QName
-) =
-  this.evaluate(expression.unabbreviated, source, returnType)
+): Any =
+  evaluate(expression.unabbreviated, source, returnType)
 
 /**
  * Evaluate [expression] in context of [item].
  *
  * @see javax.xml.xpath.XPath.evaluate
  */
-fun XPath.evaluate(expression: Expression, item: Any) =
-  this.evaluate(expression.unabbreviated, item)
+fun XPath.evaluate(
+  expression: Expression,
+  item: Any
+): String =
+  evaluate(expression.unabbreviated, item)
 
 /**
  * Evaluate [expression] in context of [item] with [returnType].
  *
  * @see javax.xml.xpath.XPath.evaluate
  */
-fun XPath.evaluate(expression: Expression, item: Any, returnType: QName) =
-  this.evaluate(expression.unabbreviated, item, returnType)
+fun XPath.evaluate(
+  expression: Expression,
+  item: Any,
+  returnType: QName
+): Any =
+  evaluate(expression.unabbreviated, item, returnType)
