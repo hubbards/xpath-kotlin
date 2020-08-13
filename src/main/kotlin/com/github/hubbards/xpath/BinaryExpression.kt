@@ -1,38 +1,32 @@
 package com.github.hubbards.xpath
 
-class BinaryExpression internal constructor(
-    internal val operator: Operator,
-    val left: Expression,
-    val right: Expression
+/**
+ * A binary XPath expression.
+ */
+data class BinaryExpression(
+  val operator: Operator,
+  val left: Expression,
+  val right: Expression
 ) : Expression() {
-  private fun helper(transform: (Expression) -> String) =
-      buildString {
-        val l = transform(left)
-        if (left is BinaryExpression && left.operator < operator) {
-          append('(')
-          append(l)
-          append(')')
-        } else {
-          append(l)
-        }
+  // helper method
+  private fun layout(linearize: (Syntax) -> String) =
+    buildString {
+      if (left is BinaryExpression && left.operator < operator)
+        parenthesize(linearize(left))
+      else
+        append(linearize(left))
+      append(' ')
+      append(operator)
+      append(' ')
+      if (right is BinaryExpression && right.operator <= operator)
+        parenthesize(linearize(right))
+      else
+        append(linearize(right))
+    }
 
-        append(' ')
-        append(operator)
-        append(' ')
+  override val unabbreviated =
+    layout(Syntax::unabbreviated)
 
-        val r = transform(right)
-        if (right is BinaryExpression && right.operator <= operator) {
-          append('(')
-          append(r)
-          append(')')
-        } else {
-          append(r)
-        }
-      }
-
-  override fun unabbreviated() =
-      helper(Expression::unabbreviated)
-
-  override fun abbreviated() =
-      helper(Expression::abbreviated)
+  override val abbreviated =
+    layout(Syntax::abbreviated)
 }

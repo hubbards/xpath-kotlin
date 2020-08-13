@@ -1,27 +1,28 @@
 package com.github.hubbards.xpath
 
-import com.github.hubbards.xpath.Operator.MINUS
-
-class UnaryMinusExpression internal constructor(
-    val expression: Expression
-) : Expression() {
-  private fun helper(string: String) =
-      buildString {
-        append(MINUS)
-        append(' ')
-
-        if (expression is BinaryExpression) {
-          append('(')
-          append(string)
-          append(')')
-        } else {
-          append(string)
-        }
+/**
+ * A unary minus XPath expression.
+ */
+data class UnaryMinusExpression(val expression: Expression) : Expression() {
+  override val unabbreviated =
+    buildString {
+      append(Operator.MINUS)
+      append(' ')
+      if (expression is BinaryExpression) {
+        parenthesize(expression.unabbreviated)
+      } else {
+        append(expression.unabbreviated)
       }
+    }
 
-  override fun unabbreviated() =
-      helper(expression.unabbreviated())
-
-  override fun abbreviated() =
-      helper(expression.abbreviated())
+  override val abbreviated =
+    buildString {
+      append(Operator.MINUS)
+      append(' ')
+      if (expression is BinaryExpression) {
+        parenthesize(expression.abbreviated)
+      } else {
+        append(expression.abbreviated)
+      }
+    }
 }

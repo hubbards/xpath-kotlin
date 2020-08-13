@@ -1,7 +1,11 @@
 package com.github.hubbards.xpath
 
-// TODO: add missing axes
-internal enum class Axis {
+/**
+ * An [axis][specification].
+ *
+ * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#axes
+ */
+enum class Axis {
   SELF,
   CHILD,
   PARENT,
@@ -9,8 +13,13 @@ internal enum class Axis {
   ANCESTOR,
   DESCENDANT_OR_SELF,
   ANCESTOR_OR_SELF,
-  ATTRIBUTE;
+  FOLLOWING,
+  PRECEDING,
+  FOLLOWING_SIBLING,
+  PRECEDING_SIBLING,
+  ATTRIBUTE,
+  NAMESPACE;
 
   override fun toString() =
-      this.name.toLowerCase().replace('_', '-')
+    name.toLowerCase().replace('_', '-')
 }

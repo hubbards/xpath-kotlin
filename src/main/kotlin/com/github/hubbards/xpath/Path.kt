@@ -1,135 +1,369 @@
 package com.github.hubbards.xpath
 
-import com.github.hubbards.xpath.Axis.*
-
 /**
- * A location path, see
- * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#location-paths).
+ * A [location path][specification] XPath expression.
+ *
+ * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#location-paths
  */
 sealed class Path : Expression() {
-  protected val steps = mutableListOf<Step>()
-
-  private fun doInit(step: Step, init: Step.() -> Unit) {
-    steps += step.apply(init)
-  }
+  abstract val steps: List<Step>
 
   /**
-   * Add self axis step to this path.
+   * An absolute location path.
    */
-  fun self(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
-      doInit(Step(SELF, node), init)
-
-  /**
-   * Add child axis step to this path.
-   */
-  fun child(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
-      doInit(Step(CHILD, node), init)
-
-  /**
-   * Add parent axis step to this path.
-   */
-  fun parent(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
-      doInit(Step(PARENT, node), init)
-
-  /**
-   * Add descendant axis step to this path.
-   */
-  fun descendant(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
-      doInit(Step(DESCENDANT, node), init)
-
-  /**
-   * Add ancestor axis step to this path.
-   */
-  fun ancestor(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
-      doInit(Step(ANCESTOR, node), init)
-
-  /**
-   * Add descendant-or-self axis step to this path.
-   */
-  fun descendantOrSelf(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
-      doInit(Step(DESCENDANT_OR_SELF, node), init)
-
-  /**
-   * Add ancestor-or-self axis step to this path.
-   */
-  fun ancestorOrSelf(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
-      doInit(Step(ANCESTOR_OR_SELF, node), init)
-
-  /**
-   * Add attribute axis step to this path.
-   */
-  fun attribute(node: String = NODE_TEST, init: Step.() -> Unit = {}) =
-      doInit(Step(ATTRIBUTE, node), init)
-}
-
-/**
- * A relative location path.
- */
-class RelativePath(init: Path.() -> Unit) : Path() {
-  init {
-    apply(init)
-  }
-
-  override fun abbreviated(): String {
-    val first =
-        if (steps.isNotEmpty())
-          steps.first().abbreviated() + (if (steps.size > 1) "/" else "")
-        else
-          ""
-    val last =
-        if (steps.size > 1)
-          (if (steps.size > 2) "/" else "") + steps.last().abbreviated()
-        else
-          ""
-    return steps.drop(1).dropLast(1).joinToString(
-        separator = "/",
-        prefix = first,
-        postfix = last,
-        transform = ::helper
-    )
-  }
-
-  override fun unabbreviated() =
+  data class Absolute(override val steps: List<Step>) : Path() {
+    override val unabbreviated =
       steps.joinToString(
-          separator = "/",
-          transform = Step::unabbreviated
-      )
-}
-
-/**
- * An absolute location path.
- */
-class AbsolutePath(init: Path.() -> Unit) : Path() {
-  init {
-    apply(init)
-  }
-
-  override fun abbreviated(): String {
-    val last =
-        if (steps.isNotEmpty())
-          (if (steps.size > 1) "/" else "") + steps.last().abbreviated()
-        else
-          ""
-    return steps.dropLast(1).joinToString(
         separator = "/",
         prefix = "/",
-        postfix = last,
-        transform = ::helper
-    )
+        transform = Step::unabbreviated
+      )
+
+    override val abbreviated =
+      buildString {
+        append('/')
+        // interior steps
+        for (step in steps.dropLast(1)) {
+          interior(step)
+          append('/')
+        }
+        // last step
+        if (steps.isNotEmpty()) {
+          append(steps.last().abbreviated)
+        }
+      }
   }
 
-  override fun unabbreviated() =
-      steps.joinToString(
-          separator = "/",
-          prefix = "/",
-          transform = Step::unabbreviated
-      )
-}
+  /**
+   * A relative location path, which must consist of at least one location step.
+   */
+  data class Relative(override val steps: List<Step>) : Path() {
+    init {
+      require(steps.isNotEmpty()) {
+        "relative path must consist of at least one step"
+      }
+    }
 
-private fun helper(step: Step) =
-    if (step.axis == DESCENDANT_OR_SELF &&
-        step.node == NODE_TEST &&
-        step.hasNoPredicates)
-      ""
-    else
-      step.abbreviated()
+    override val unabbreviated =
+      steps.joinToString(
+        separator = "/",
+        transform = Step::unabbreviated
+      )
+
+    override val abbreviated =
+      buildString {
+        // first step
+        append(steps.first().abbreviated)
+        // interior steps
+        for (step in steps.drop(1).dropLast(1)) {
+          append('/')
+          interior(step)
+        }
+        // last step
+        if (steps.size > 1) {
+          append('/')
+          append(steps.last().abbreviated)
+        }
+      }
+  }
+
+  /**
+   * A location path builder.
+   */
+  class Builder {
+    private val steps =
+      mutableListOf<Step>()
+
+    private fun doInit(builder: Step.Builder, init: Step.Builder.() -> Unit) {
+      steps += builder.apply(init).build()
+    }
+
+    /**
+     * Build an absolute location path
+     */
+    fun absolute(): Absolute =
+      Absolute(steps.toList())
+
+    /**
+     * Build a relative location path
+     */
+    fun relative(): Relative =
+      Relative(steps.toList())
+
+    /**
+     * Add self axis step to this path
+     */
+    fun self(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.SELF, node), init)
+
+    /**
+     * Add self axis step to this path
+     */
+    fun self(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.SELF, NodeTest.Name(name)), init)
+
+    /**
+     * Add child axis step to this path
+     */
+    fun child(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.CHILD, node), init)
+
+    /**
+     * Add child axis step to this path
+     */
+    fun child(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.CHILD, NodeTest.Name(name)), init)
+
+    /**
+     * Add parent axis step to this path
+     */
+    fun parent(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.PARENT, node), init)
+
+    /**
+     * Add parent axis step to this path
+     */
+    fun parent(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.PARENT, NodeTest.Name(name)), init)
+
+    /**
+     * Add descendant axis step to this path
+     */
+    fun descendant(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.DESCENDANT, node), init)
+
+    /**
+     * Add descendant axis step to this path
+     */
+    fun descendant(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.DESCENDANT, NodeTest.Name(name)), init)
+
+    /**
+     * Add ancestor axis step to this path
+     */
+    fun ancestor(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.ANCESTOR, node), init)
+
+    /**
+     * Add ancestor axis step to this path
+     */
+    fun ancestor(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.ANCESTOR, NodeTest.Name(name)), init)
+
+    /**
+     * Add descendant-or-self axis step to this path
+     */
+    fun descendantOrSelf(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.DESCENDANT_OR_SELF, node), init)
+
+    /**
+     * Add descendant-or-self axis step to this path
+     */
+    fun descendantOrSelf(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.DESCENDANT_OR_SELF, NodeTest.Name(name)), init)
+
+    /**
+     * Add ancestor-or-self axis step to this path
+     */
+    fun ancestorOrSelf(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, node), init)
+
+    /**
+     * Add ancestor-or-self axis step to this path
+     */
+    fun ancestorOrSelf(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.ANCESTOR_OR_SELF, NodeTest.Name(name)), init)
+
+    /**
+     * Add following axis step to this path
+     */
+    fun following(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.FOLLOWING, node), init)
+
+    /**
+     * Add following axis step to this path
+     */
+    fun following(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.FOLLOWING, NodeTest.Name(name)), init)
+
+    /**
+     * Add preceding axis step to this path
+     */
+    fun preceding(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.PRECEDING, node), init)
+
+    /**
+     * Add preceding axis step to this path
+     */
+    fun preceding(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.PRECEDING, NodeTest.Name(name)), init)
+
+    /**
+     * Add following-sibling axis step to this path
+     */
+    fun followingSibling(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.FOLLOWING_SIBLING, node), init)
+
+    /**
+     * Add following-sibling axis step to this path
+     */
+    fun followingSibling(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.FOLLOWING_SIBLING, NodeTest.Name(name)), init)
+
+    /**
+     * Add preceding-sibling axis step to this path
+     */
+    fun precedingSibling(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.PRECEDING_SIBLING, node), init)
+
+    /**
+     * Add preceding-sibling axis step to this path
+     */
+    fun precedingSibling(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.PRECEDING_SIBLING, NodeTest.Name(name)), init)
+
+    /**
+     * Add attribute axis step to this path
+     */
+    fun attribute(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.ATTRIBUTE, node), init)
+
+    /**
+     * Add attribute axis step to this path
+     */
+    fun attribute(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.ATTRIBUTE, NodeTest.Name(name)), init)
+
+    /**
+     * Add namespace axis step to this path
+     */
+    fun namespace(
+      node: NodeTest = NodeTest.Node,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.NAMESPACE, node), init)
+
+    /**
+     * Add namespace axis step to this path
+     */
+    fun namespace(
+      name: String,
+      init: Step.Builder.() -> Unit = {}
+    ): Unit =
+      doInit(Step.Builder(Axis.NAMESPACE, NodeTest.Name(name)), init)
+  }
+
+  /**
+   * Factory methods for constructing location paths.
+   */
+  companion object Factory {
+    // helper method
+    private fun StringBuilder.interior(step: Step) =
+      if (
+        step.axis == Axis.DESCENDANT_OR_SELF &&
+        step.node == NodeTest.Node &&
+        step.predicates.isEmpty()
+      )
+        this
+      else
+        append(step.abbreviated)
+
+    /**
+     * Construct an absolute location path. This is useful for constructing an
+     * absolute location path from Java.
+     */
+    fun absolute(vararg steps: Step): Absolute =
+      Absolute(steps.asList())
+
+    /**
+     * An absolute location path.
+     */
+    fun absolute(init: Builder.() -> Unit): Absolute =
+      Builder().apply(init).absolute()
+
+    /**
+     * Construct a relative location path. This is useful for constructing a
+     * relative location path from Java.
+     */
+    fun relative(vararg steps: Step): Relative =
+      Relative(steps.asList())
+
+    /**
+     * A relative location path.
+     */
+    fun relative(init: Builder.() -> Unit): Relative =
+      Builder().apply(init).relative()
+  }
+}

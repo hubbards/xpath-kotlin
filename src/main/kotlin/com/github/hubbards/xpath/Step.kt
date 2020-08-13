@@ -1,46 +1,88 @@
 package com.github.hubbards.xpath
 
-import com.github.hubbards.xpath.Axis.*
-
-internal const val NODE_TEST = "node()"
-
 /**
- * A location step, see
- * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Location-Steps).
+ * A [location step][specification].
+ *
+ * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Location-Steps
  */
-class Step internal constructor(
-    internal val axis: Axis = CHILD,
-    val node: String = NODE_TEST
+data class Step(
+  val axis: Axis = Axis.CHILD,
+  val node: NodeTest = NodeTest.Node,
+  val predicates: List<Expression> = emptyList()
 ) : Syntax {
-  private val predicates = mutableListOf<Expression>()
+  override val unabbreviated =
+    buildString {
+      append(axis)
+      append(':')
+      append(':')
+      append(node)
+      for (predicate in predicates) {
+        brackets(predicate.unabbreviated)
+      }
+    }
 
-  internal val hasNoPredicates: Boolean
-      get() = predicates.isEmpty()
-
-  /**
-   * Add [expression] predicate to this step.
-   */
-  fun predicate(expression: Expression) {
-    predicates += expression
-  }
-
-  override fun abbreviated() =
+  override val abbreviated =
+    buildString {
       when {
         // abbreviated syntax for child::
-        axis == CHILD -> node
+        axis == Axis.CHILD ->
+          append(node)
         // abbreviated syntax for attribute::
-        axis == ATTRIBUTE -> "@$node"
+        axis == Axis.ATTRIBUTE -> {
+          append('@')
+          append(node)
+        }
         // abbreviated syntax for self::node()
-        axis == SELF && node == NODE_TEST && hasNoPredicates -> "."
+        axis == Axis.SELF && node == NodeTest.Node && predicates.isEmpty() ->
+          append('.')
         // abbreviated syntax for parent::node()
-        axis == PARENT && node == NODE_TEST && hasNoPredicates -> ".."
+        axis == Axis.PARENT && node == NodeTest.Node && predicates.isEmpty() -> {
+          append('.')
+          append('.')
+        }
         // unabbreviated syntax
-        else -> "$axis::$node"
-      } + predicates.joinToString("") { "[${it.abbreviated()}]" }
+        else -> {
+          append(axis)
+          append(':')
+          append(':')
+          append(node)
+        }
+      }
+      for (predicate in predicates) {
+        brackets(predicate.abbreviated)
+      }
+    }
 
-  override fun unabbreviated() =
-      "$axis::$node" + predicates.joinToString("") { "[${it.unabbreviated()}]" }
+  /**
+   * A location step builder.
+   */
+  class Builder(val axis: Axis, val node: NodeTest) {
+    private val predicates =
+      mutableListOf<Expression>()
 
-  override fun toString() =
-      abbreviated()
+    /**
+     * Add [expression] predicate to this builder.
+     */
+    fun predicate(expression: Expression) {
+      predicates += expression
+    }
+
+    /**
+     * Build a location step.
+     */
+    fun build(): Step =
+      Step(axis, node, predicates.toList())
+  }
+
+  /**
+   * Factory methods for constructing location steps.
+   */
+  companion object Factory {
+    /**
+     * Construct a location step. This is useful for constructing a location
+     * step from Java.
+     */
+    fun step(axis: Axis, node: NodeTest, vararg predicates: Expression): Step =
+      Step(axis, node, predicates.asList())
+  }
 }

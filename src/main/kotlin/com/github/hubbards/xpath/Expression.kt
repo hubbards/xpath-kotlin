@@ -1,57 +1,98 @@
 package com.github.hubbards.xpath
 
-import com.github.hubbards.xpath.Operator.*
-
 /**
- * An XPath expression, see
- * [specification](https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Expressions).
+ * An XPath [expression][specification].
+ *
+ * [specification]: https://www.w3.org/TR/1999/REC-xpath-19991116/#section-Expressions
  */
 abstract class Expression : Syntax {
-  infix fun equal(e: Expression) =
-      BinaryExpression(EQUAL, this, e)
+  /**
+   * TODO document
+   */
+  infix fun equal(other: Expression): Expression =
+    BinaryExpression(Operator.EQUAL, this, other)
 
-  infix fun notEqual(e: Expression) =
-      BinaryExpression(NOT_EQUAL, this, e)
+  /**
+   * TODO document
+   */
+  infix fun notEqual(other: Expression): Expression =
+    BinaryExpression(Operator.NOT_EQUAL, this, other)
 
-  infix fun greaterThan(e: Expression) =
-      BinaryExpression(GREATER_THAN, this, e)
+  /**
+   * TODO document
+   */
+  infix fun greaterThan(other: Expression): Expression =
+    BinaryExpression(Operator.GREATER_THAN, this, other)
 
-  infix fun lessThan(e: Expression) =
-      BinaryExpression(LESS_THAN, this, e)
+  /**
+   * TODO document
+   */
+  infix fun lessThan(other: Expression): Expression =
+    BinaryExpression(Operator.LESS_THAN, this, other)
 
-  infix fun greaterThanOrEqualTo(e: Expression) =
-      BinaryExpression(GREATER_THAN_OR_EQUAL_TO, this, e)
+  /**
+   * TODO document
+   */
+  infix fun greaterThanOrEqualTo(other: Expression): Expression =
+    BinaryExpression(Operator.GREATER_THAN_OR_EQUAL_TO, this, other)
 
-  infix fun lessThanOrEqualTo(e: Expression) =
-      BinaryExpression(LESS_THAN_OR_EQUAL_TO, this, e)
+  /**
+   * TODO document
+   */
+  infix fun lessThanOrEqualTo(other: Expression): Expression =
+    BinaryExpression(Operator.LESS_THAN_OR_EQUAL_TO, this, other)
 
-  infix fun and(e: Expression) =
-      BinaryExpression(AND, this, e)
+  /**
+   * TODO document
+   */
+  infix fun and(other: Expression): Expression =
+    BinaryExpression(Operator.AND, this, other)
 
-  infix fun or(e: Expression) =
-      BinaryExpression(OR, this, e)
+  /**
+   * TODO document
+   */
+  infix fun or(other: Expression): Expression =
+    BinaryExpression(Operator.OR, this, other)
 
-  operator fun unaryMinus() =
-      UnaryMinusExpression(this)
+  /**
+   * TODO document
+   */
+  operator fun unaryMinus(): Expression =
+    UnaryMinusExpression(this)
 
-  operator fun plus(e: Expression) =
-      BinaryExpression(PLUS, this, e)
+  /**
+   * TODO document
+   */
+  operator fun plus(other: Expression): Expression =
+    BinaryExpression(Operator.PLUS, this, other)
 
-  operator fun minus(e: Expression) =
-      BinaryExpression(MINUS, this, e)
+  /**
+   * TODO document
+   */
+  operator fun minus(other: Expression): Expression =
+    BinaryExpression(Operator.MINUS, this, other)
 
-  operator fun times(e: Expression) =
-      BinaryExpression(TIMES, this, e)
+  /**
+   * TODO document
+   */
+  operator fun times(other: Expression): Expression =
+    BinaryExpression(Operator.TIMES, this, other)
 
-  operator fun div(e: Expression) =
-      BinaryExpression(DIVIDE, this, e)
+  /**
+   * TODO document
+   */
+  operator fun div(other: Expression): Expression =
+    BinaryExpression(Operator.DIVIDE, this, other)
 
-  operator fun rem(e: Expression) =
-      BinaryExpression(MODULO, this, e)
+  /**
+   * TODO document
+   */
+  operator fun rem(other: Expression): Expression =
+    BinaryExpression(Operator.MODULO, this, other)
 
-  infix fun union(e: Expression) =
-      BinaryExpression(UNION, this, e)
-
-  override fun toString() =
-      abbreviated()
+  /**
+   * TODO document
+   */
+  infix fun union(other: Expression): Expression =
+    BinaryExpression(Operator.UNION, this, other)
 }

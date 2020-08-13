@@ -20,7 +20,7 @@ can build a value equivalent to the XPath expression above in a structured way.
 
     run {
       val three = LiteralNumber(3)
-      val items = AbsolutePath {
+      val items = absolute {
         descendantOrSelf()
         child("ol")
         child("li")

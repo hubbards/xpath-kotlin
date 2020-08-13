@@ -1,7 +1,8 @@
-import org.gradle.jvm.tasks.Jar
-import org.gradle.api.tasks.testing.logging.TestLogEvent
+// https://docs.gradle.org/current/userguide/userguide.html
 
 import com.jfrog.bintray.gradle.BintrayExtension
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.jvm.tasks.Jar
 
 group = "com.github.hubbards"
 version = "0.0.3"
@@ -13,6 +14,7 @@ plugins {
 
   id("org.jetbrains.dokka") version "0.9.18"
   id("com.jfrog.bintray") version "1.8.4"
+  id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
 }
 
 repositories {
@@ -24,6 +26,13 @@ dependencies {
 
   testImplementation(group = "junit", name = "junit", version = "4.12")
   testImplementation(kotlin(module = "test"))
+}
+
+tasks.compileKotlin {
+  kotlinOptions {
+    jvmTarget = "1.8"
+    freeCompilerArgs += "-Xjvm-default=enable"
+  }
 }
 
 tasks.test {
@@ -82,13 +91,17 @@ bintray {
 
   setPublications("default")
 
-  pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-    repo = "maven"
-    name = "xpath-kotlin"
-    vcsUrl = "https://github.com/hubbards/xpath-kotlin.git"
-    setLicenses("MIT")
-    version(delegateClosureOf<BintrayExtension.VersionConfig> {
-      name = project.version.toString()
-    })
-  })
+  pkg(
+    delegateClosureOf<BintrayExtension.PackageConfig> {
+      repo = "maven"
+      name = "xpath-kotlin"
+      vcsUrl = "https://github.com/hubbards/xpath-kotlin.git"
+      setLicenses("MIT")
+      version(
+        delegateClosureOf<BintrayExtension.VersionConfig> {
+          name = project.version.toString()
+        }
+      )
+    }
+  )
 }
