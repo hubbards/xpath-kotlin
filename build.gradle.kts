@@ -5,19 +5,20 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.jvm.tasks.Jar
 
 group = "com.github.hubbards"
-version = "0.0.4"
+version = "0.0.5"
 
 plugins {
   `maven-publish`
 
-  kotlin("jvm") version "1.3.72"
+  kotlin("jvm") version "1.4.0"
 
-  id("org.jetbrains.dokka") version "0.9.18"
+  id("org.jetbrains.dokka") version "1.4.0"
   id("com.jfrog.bintray") version "1.8.4"
   id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
 }
 
 repositories {
+  gradlePluginPortal()
   jcenter()
 }
 
@@ -45,9 +46,8 @@ tasks.test {
   }
 }
 
-tasks.dokka {
-  outputFormat = "html"
-  outputDirectory = "$buildDir/javadoc"
+tasks.dokkaHtml.configure {
+  outputDirectory.set(buildDir.resolve("javadoc"))
 }
 
 tasks.create<Jar>("dokkaJar") {
@@ -56,7 +56,7 @@ tasks.create<Jar>("dokkaJar") {
 
   archiveClassifier.set("javadoc")
 
-  from(tasks.dokka)
+  from(tasks.dokkaHtml)
 }
 
 tasks.create<Jar>("sourcesJar") {
