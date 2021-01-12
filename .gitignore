@@ -1,4 +1,6 @@
-# https://git-scm.com/docs/gitignore
+# .gitignore
+# Project-specific gitignore file.  See gitignore(5) manual for more
+# information.
 
 # Gradle build output directory
 build
@@ -9,9 +11,3 @@ build
 # Gradle wrapper
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
-
-# IntelliJ IDEA directory
-.idea
-
-# macOS system file
-.DS_Store
