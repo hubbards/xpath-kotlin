@@ -70,8 +70,8 @@ publishing {
       // Use Sonatype's Open Source Software Repository Hosting (OSSRH) service
       // See https://central.sonatype.org/publish
       url = URI.create("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-      val ossrhUsername: String by project
-      val ossrhPassword: String by project
+      val ossrhUsername: String? by project
+      val ossrhPassword: String? by project
       credentials {
         username = ossrhUsername
         password = ossrhPassword
